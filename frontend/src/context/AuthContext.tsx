@@ -1,14 +1,16 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { User } from '../types';
-import { loginApi, logoutApi } from '../api/authApi';
+import { sendOtpApi, verifyOtpApi, completeSignupApi, logoutApi } from '../api/authApi';
 import api from '../api/axios';
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  sendOtp: (mobile: string) => Promise<any>;
+  verifyOtp: (mobile: string, code: string) => Promise<{ isNewUser: boolean }>;
+  completeSignup: (name: string, email: string) => Promise<void>;
   logout: () => Promise<void>;
   setUser: (user: User | null) => void;
   setToken: (token: string | null) => void;
@@ -42,19 +44,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [token, fetchProfile]);
 
-  const login = async (email: string, password: string) => {
-    const res = await loginApi(email, password);
-    const { token: newToken, user: loggedInUser } = res.data;
+  const sendOtp = async (mobile: string) => {
+    const res = await sendOtpApi(mobile);
+    return res.data;
+  };
+
+  const verifyOtp = async (mobile: string, code: string) => {
+    const res = await verifyOtpApi(mobile, code);
+    const { token: newToken, user: loggedInUser, isNewUser } = res.data;
+    
     localStorage.setItem('authToken', newToken);
     setToken(newToken);
     setUser(loggedInUser);
+    
+    return { isNewUser };
+  };
+
+  const completeSignup = async (name: string, email: string) => {
+    const res = await completeSignupApi({ name, email });
+    setUser(res.data.user);
   };
 
   const logout = async () => {
-    await logoutApi();
-    localStorage.removeItem('authToken');
-    setToken(null);
-    setUser(null);
+    try {
+      await logoutApi();
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      localStorage.removeItem('authToken');
+      setToken(null);
+      setUser(null);
+    }
   };
 
   // Expose setToken so Google OAuth can persist JWT directly
@@ -65,7 +85,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, login, logout, setUser, setToken: persistToken }}>
+    <AuthContext.Provider value={{ 
+      user, token, isLoading, 
+      sendOtp, verifyOtp, completeSignup, logout, 
+      setUser, setToken: persistToken 
+    }}>
       {children}
     </AuthContext.Provider>
   );

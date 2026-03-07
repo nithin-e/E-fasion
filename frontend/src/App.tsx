@@ -10,9 +10,7 @@ import './styles/globals.css';
 
 // === Lazy loaded pages ===
 // Auth
-const LoginPage      = lazy(() => import('./pages/auth/LoginPage'));
-const RegisterPage   = lazy(() => import('./pages/auth/RegisterPage'));
-const VerifyOTPPage  = lazy(() => import('./pages/auth/VerifyOTPPage'));
+const UnifiedAuth    = lazy(() => import('./pages/auth/UnifiedAuth'));
 
 // User
 const HomePage          = lazy(() => import('./pages/user/HomePage'));
@@ -27,11 +25,15 @@ const OrderDetailPage   = lazy(() => import('./pages/user/OrderDetailPage'));
 const OrderSuccessPage  = lazy(() => import('./pages/user/OrderSuccessPage'));
 
 // Admin
-const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
-const AdminProducts  = lazy(() => import('./pages/admin/AdminProducts'));
-const AdminOrders    = lazy(() => import('./pages/admin/AdminOrders'));
-const AdminCustomers = lazy(() => import('./pages/admin/AdminCustomers'));
-const AdminCoupons   = lazy(() => import('./pages/admin/AdminCoupons'));
+const AdminDashboard  = lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminProducts   = lazy(() => import('./pages/admin/AdminProducts'));
+const AdminProductForm = lazy(() => import('./pages/admin/AdminProductForm'));
+const AdminCategories  = lazy(() => import('./pages/admin/AdminCategories'));
+const AdminOrders     = lazy(() => import('./pages/admin/AdminOrders'));
+const AdminCustomers  = lazy(() => import('./pages/admin/AdminCustomers'));
+const AdminCoupons    = lazy(() => import('./pages/admin/AdminCoupons'));
+const AdminBrands     = lazy(() => import('./pages/admin/AdminBrands'));
+const AdminBanners    = lazy(() => import('./pages/admin/AdminBanners'));
 
 const PageLoader = () => (
   <div className="page-loader"><div className="spinner" /></div>
@@ -48,9 +50,8 @@ const App: React.FC = () => {
 
               {/* ===== PUBLIC ROUTES (no layout) ===== */}
               <Route element={<GuestRoute />}>
-                <Route path="/login"      element={<LoginPage />} />
-                <Route path="/register"   element={<RegisterPage />} />
-                <Route path="/verify-otp" element={<VerifyOTPPage />} />
+                <Route path="/login"      element={<UnifiedAuth />} />
+                <Route path="/register"   element={<UnifiedAuth />} />
               </Route>
 
               {/* ===== USER-FACING ROUTES ===== */}
@@ -78,9 +79,14 @@ const App: React.FC = () => {
                 <Route element={<AdminLayout />}>
                   <Route path="/admin/dashboard"    element={<AdminDashboard />} />
                   <Route path="/admin/products"     element={<AdminProducts />} />
+                  <Route path="/admin/products/add" element={<AdminProductForm />} />
+                  <Route path="/admin/products/:id/edit" element={<AdminProductForm />} />
+                  <Route path="/admin/categories"   element={<AdminCategories />} />
                   <Route path="/admin/orders"       element={<AdminOrders />} />
                   <Route path="/admin/customers"    element={<AdminCustomers />} />
                   <Route path="/admin/coupons"      element={<AdminCoupons />} />
+                  <Route path="/admin/brands"       element={<AdminBrands />} />
+                  <Route path="/admin/banners"      element={<AdminBanners />} />
                 </Route>
               </Route>
 

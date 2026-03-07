@@ -9,7 +9,10 @@ export interface User {
   role: 'user' | 'admin';
   is_verified: boolean;
   is_blocked: boolean;
+  is_profile_complete: boolean;
+  wallet: number;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface Address {
@@ -38,11 +41,21 @@ export interface Variant {
   _id: string;
   productId: string;
   shadeName?: string;
+  shadeHex?: string;
   size: string;
   price: number;
+  discountPrice?: number;
   stock: number;
   images: string[];
   is_deleted: boolean;
+}
+
+export interface Brand {
+  _id: string;
+  name: string;
+  slug: string;
+  logo: string;
+  description?: string;
 }
 
 export interface Product {
@@ -50,15 +63,15 @@ export interface Product {
   name: string;
   description: string;
   categoryId: Category;
-  brand: string;
+  brand: string | Brand;
   highlights: string[];
   basePrice: number;
+  avgRating?: number;
+  numReviews?: number;
   is_deleted: boolean;
   variants?: Variant[];
-  ratings?: {
-    average: number;
-    count: number;
-  };
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CartItem {
@@ -99,6 +112,16 @@ export interface Coupon {
   maxRedeemable: number;
   expiresAt: string;
   is_active: boolean;
+}
+
+export interface Banner {
+  _id: string;
+  image: string;
+  link: string;
+  title?: string;
+  description?: string;
+  isActive: boolean;
+  priority: number;
 }
 
 export interface ApiResponse<T = unknown> {

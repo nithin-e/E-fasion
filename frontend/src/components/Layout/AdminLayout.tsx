@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Package, Tag, ShoppingCart,
-  Users, Ticket, BarChart2, Gift, ChevronRight, LogOut, Menu
+  Users, Ticket, ChevronRight, LogOut, Menu
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './AdminLayout.css';
@@ -12,10 +12,10 @@ const navItems = [
   { to: '/admin/orders', label: 'Orders', icon: <ShoppingCart size={18} /> },
   { to: '/admin/products', label: 'Products', icon: <Package size={18} /> },
   { to: '/admin/categories', label: 'Categories', icon: <Tag size={18} /> },
+  { to: '/admin/brands', label: 'Brands', icon: <Tag size={18} /> },
+  { to: '/admin/banners', label: 'Banners', icon: <LayoutDashboard size={18} /> },
   { to: '/admin/customers', label: 'Customers', icon: <Users size={18} /> },
   { to: '/admin/coupons', label: 'Coupons', icon: <Ticket size={18} /> },
-  { to: '/admin/offers', label: 'Offers', icon: <Gift size={18} /> },
-  { to: '/admin/sales-report', label: 'Sales Report', icon: <BarChart2 size={18} /> },
 ];
 
 const AdminLayout: React.FC = () => {

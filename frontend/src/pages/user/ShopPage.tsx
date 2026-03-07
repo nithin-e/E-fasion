@@ -2,69 +2,99 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, ChevronDown } from 'lucide-react';
 import { getProductsApi, getCategoriesApi } from '../../api/productApi';
-import type { Product, Category } from '../../types';
+import { getBrandsApi } from '../../api/brandApi';
+import type { Product, Category, Brand } from '../../types';
 import ProductCard from '../../components/shared/ProductCard';
 import './ShopPage.css';
 
 const SORT_OPTIONS = [
   { label: 'Recommended', value: 'recommended' },
-  { label: 'Sort by: Newest', value: 'newest' },
-  { label: 'Price: Low to High', value: 'price_low' },
-  { label: 'Price: High to Low', value: 'price_high' },
+  { label: 'Newest', value: 'newest' },
+  { label: 'Price: Low to High', value: 'price_asc' },
+  { label: 'Price: High to Low', value: 'price_desc' },
+  { label: 'Customer Rating', value: 'rating' },
 ];
+
+const DISCOUNT_OPTIONS = [10, 20, 30, 40, 50, 60, 70, 80];
+
 const ShopPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const currentCategory = searchParams.get('category') || '';
-  const currentSort = searchParams.get('sort') || '';
+  // Filter States from URL
+  const selectedCategory = searchParams.get('category') || '';
+  const selectedBrands = searchParams.getAll('brand');
+  const selectedColors = searchParams.getAll('color');
+  const currentSort = searchParams.get('sort') || 'recommended';
   const currentSearch = searchParams.get('q') || '';
+  const minPrice = searchParams.get('minPrice');
+  const maxPrice = searchParams.get('maxPrice');
+  const discount = searchParams.get('discount');
 
-  const loadProducts = useCallback(async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const params: Record<string, string> = {};
-      if (currentCategory) params.category = currentCategory;
-      if (currentSort) params.sort = currentSort;
-      if (currentSearch) params.q = currentSearch;
-      const res = await getProductsApi(params);
-      setProducts(res.data.products || []);
+      const [prodRes, catRes, brandRes] = await Promise.all([
+        getProductsApi({
+          q: currentSearch,
+          category: selectedCategory,
+          brand: selectedBrands,
+          color: selectedColors,
+          minPrice: minPrice ? parseFloat(minPrice) : undefined,
+          maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
+          discount: discount ? parseFloat(discount) : undefined,
+          sort: currentSort,
+        }),
+        getCategoriesApi(),
+        getBrandsApi(),
+      ]);
+      setProducts(prodRes.data.products || []);
+      setCategories(catRes.data.categories || []);
+      setBrands(brandRes.data.brands || []);
     } finally {
       setLoading(false);
     }
-  }, [currentCategory, currentSort, currentSearch]);
+  }, [currentSearch, selectedCategory, selectedBrands.join(','), selectedColors.join(','), minPrice, maxPrice, discount, currentSort]);
 
-  useEffect(() => {
-    getCategoriesApi().then((r) => setCategories(r.data.categories || []));
-  }, []);
+  useEffect(() => { loadData(); }, [loadData]);
 
-  useEffect(() => { loadProducts(); }, [loadProducts]);
-
-  const setParam = (key: string, value: string) => {
+  const setParam = (key: string, value: string | string[]) => {
     const params = new URLSearchParams(searchParams);
-    if (value) params.set(key, value); else params.delete(key);
+    params.delete(key);
+    if (Array.isArray(value)) {
+      value.forEach(v => params.append(key, v));
+    } else if (value) {
+      params.set(key, value);
+    }
     setSearchParams(params);
+  };
+
+  const toggleArrayFilter = (key: string, value: string) => {
+    const current = searchParams.getAll(key);
+    const updated = current.includes(value) ? current.filter(v => v !== value) : [...current, value];
+    setParam(key, updated);
   };
 
   return (
     <div className="shop-page container" style={{ maxWidth: '1600px' }}>
-      {/* Breadcrumbs */}
-      {/* Breadcrumbs */}
       <div className="shop-breadcrumbs">
-        <span onClick={() => navigate('/')}>Home</span> / <span>Clothing</span> / <span className="current">{currentCategory ? categories.find(c => c._id === currentCategory)?.name : 'All Products'}</span>
+        <span onClick={() => navigate('/')}>Home</span> / <span>Clothing</span> / 
+        <span className="current">{selectedCategory ? categories.find(c => c._id === selectedCategory)?.name : 'All Products'}</span>
       </div>
 
       <div className="shop-title-row">
-        <h3>{currentCategory ? categories.find(c => c._id === currentCategory)?.name : 'All Products'} <span className="item-count">- {products.length} items</span></h3>
+        <h3>
+          {selectedCategory ? categories.find(c => c._id === selectedCategory)?.name : 'All Products'} 
+          <span className="item-count"> - {products.length} items</span>
+        </h3>
       </div>
 
       <div className="shop-secondary-header">
-        <div className="shop-filters-header">
-           <span className="filters-label">FILTERS</span>
-        </div>
+        <div className="shop-filters-header">FILTERS</div>
         <div className="shop-horizontal-filters">
            <div className="h-filter-item">Bundles <ChevronDown size={14} className="arrow" /></div>
            <div className="h-filter-item">Country of Origin <ChevronDown size={14} className="arrow" /></div>
@@ -73,7 +103,6 @@ const ShopPage: React.FC = () => {
         <div className="shop-toolbar-right">
            <div className="shop-toolbar__sort">
               <select value={currentSort} onChange={(e) => setParam('sort', e.target.value)}>
-                 <option value="">Sort by: Recommended</option>
                  {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
            </div>
@@ -81,21 +110,18 @@ const ShopPage: React.FC = () => {
       </div>
 
       <div className="shop-layout">
-        {/* Sidebar Filters */}
         <aside className="shop-filters">
-          <div className="shop-filters__title-section">
-            <span className="shop-filters__title">FILTERS</span>
-          </div>
-          
-          <div className="divider" />
-
           <div className="shop-filters__section">
             <p className="shop-filters__label">CATEGORIES</p>
             <div className="shop-filters__options">
-              {categories.map((cat) => (
+              {categories.slice(0, 8).map((cat) => (
                 <label key={cat._id} className="shop-filters__checkbox">
-                  <input type="checkbox" checked={currentCategory === cat._id} onChange={() => setParam('category', currentCategory === cat._id ? '' : cat._id)} />
-                  {cat.name} <span className="count">({Math.floor(Math.random() * 5000) + 100})</span>
+                  <input 
+                    type="checkbox" 
+                    checked={selectedCategory === cat._id} 
+                    onChange={() => setParam('category', selectedCategory === cat._id ? '' : cat._id)} 
+                  />
+                  {cat.name}
                 </label>
               ))}
             </div>
@@ -109,11 +135,17 @@ const ShopPage: React.FC = () => {
                <div className="search-circle"><Search size={12} /></div>
             </div>
             <div className="shop-filters__options">
-              <label className="shop-filters__checkbox"><input type="checkbox" /> Suruchi Exclusive <span className="count">(420)</span></label>
-              <label className="shop-filters__checkbox"><input type="checkbox" /> Diva Fashion <span className="count">(150)</span></label>
-              <label className="shop-filters__checkbox"><input type="checkbox" /> Anouk <span className="count">(10375)</span></label>
-              <label className="shop-filters__checkbox"><input type="checkbox" /> Sangria <span className="count">(9254)</span></label>
-              <div className="more-link">+ 12 more</div>
+              {brands.slice(0, 8).map(brand => (
+                <label key={brand._id} className="shop-filters__checkbox">
+                  <input 
+                    type="checkbox" 
+                    checked={selectedBrands.includes(brand._id)} 
+                    onChange={() => toggleArrayFilter('brand', brand._id)} 
+                  />
+                  {brand.name}
+                </label>
+              ))}
+              {brands.length > 8 && <div className="more-link">+ {brands.length - 8} more</div>}
             </div>
           </div>
 
@@ -122,32 +154,50 @@ const ShopPage: React.FC = () => {
           <div className="shop-filters__section">
             <p className="shop-filters__label">PRICE</p>
             <div className="shop-filters__options">
-              <label className="shop-filters__checkbox"><input type="checkbox" /> Rs. 499 to Rs. 999 <span className="count">(1204)</span></label>
-              <label className="shop-filters__checkbox"><input type="checkbox" /> Rs. 999 to Rs. 1999 <span className="count">(3502)</span></label>
-              <label className="shop-filters__checkbox"><input type="checkbox" /> Rs. 1999 to Rs. 4999 <span className="count">(850)</span></label>
+              {[
+                { label: 'Rs. 499 to Rs. 999', min: '499', max: '999' },
+                { label: 'Rs. 999 to Rs. 1999', min: '999', max: '1999' },
+                { label: 'Rs. 1999 to Rs. 4999', min: '1999', max: '4999' },
+              ].map(range => (
+                <label key={range.label} className="shop-filters__checkbox">
+                  <input 
+                    type="checkbox" 
+                    checked={minPrice === range.min && maxPrice === range.max}
+                    onChange={() => {
+                        if (minPrice === range.min) {
+                            setParam('minPrice', ''); setParam('maxPrice', '');
+                        } else {
+                            setParam('minPrice', range.min); setParam('maxPrice', range.max);
+                        }
+                    }}
+                  />
+                  {range.label}
+                </label>
+              ))}
             </div>
           </div>
 
           <div className="divider" />
 
           <div className="shop-filters__section">
-            <div className="label-with-search">
-               <p className="shop-filters__label">COLOR</p>
-               <div className="search-circle"><Search size={12} /></div>
-            </div>
+            <p className="shop-filters__label">COLOR</p>
             <div className="shop-filters__options">
-              <label className="shop-filters__checkbox">
-                <input type="checkbox" /> 
-                <span className="color-dot" style={{ background: '#000' }}></span> Black <span className="count">(850)</span>
-              </label>
-              <label className="shop-filters__checkbox">
-                <input type="checkbox" /> 
-                <span className="color-dot" style={{ background: '#ff3f6c' }}></span> Pink <span className="count">(420)</span>
-              </label>
-              <label className="shop-filters__checkbox">
-                <input type="checkbox" /> 
-                <span className="color-dot" style={{ background: '#fff', border: '1px solid #ddd' }}></span> White <span className="count">(310)</span>
-              </label>
+              {[
+                { name: 'Black', hex: '#000' },
+                { name: 'Pink', hex: '#ff3f6c' },
+                { name: 'White', hex: '#fff' },
+                { name: 'Blue', hex: '#245dc2' },
+              ].map(color => (
+                <label key={color.name} className="shop-filters__checkbox">
+                  <input 
+                    type="checkbox" 
+                    checked={selectedColors.includes(color.name)} 
+                    onChange={() => toggleArrayFilter('color', color.name)} 
+                  />
+                  <span className="color-dot" style={{ background: color.hex, border: color.name === 'White' ? '1px solid #ddd' : 'none' }}></span>
+                  {color.name}
+                </label>
+              ))}
             </div>
           </div>
 
@@ -156,20 +206,22 @@ const ShopPage: React.FC = () => {
           <div className="shop-filters__section">
             <p className="shop-filters__label">DISCOUNT RANGE</p>
             <div className="shop-filters__options">
-              <label className="shop-filters__checkbox"><input type="radio" name="discount" /> 10% and above</label>
-              <label className="shop-filters__checkbox"><input type="radio" name="discount" /> 20% and above</label>
-              <label className="shop-filters__checkbox"><input type="radio" name="discount" /> 30% and above</label>
+              {DISCOUNT_OPTIONS.map(d => (
+                <label key={d} className="shop-filters__checkbox">
+                  <input 
+                    type="radio" 
+                    name="discount" 
+                    checked={discount === d.toString()} 
+                    onChange={() => setParam('discount', d.toString())} 
+                  />
+                  {d}% and above
+                </label>
+              ))}
             </div>
           </div>
         </aside>
 
-        {/* Main Content */}
         <div className="shop-main">
-          {/* Promo Ribbon */}
-          <div className="promo-ribbon-sticky">
-             UPTO ₹500 OFF
-          </div>
-
           {loading ? (
             <div className="page-loader"><div className="spinner" /></div>
           ) : products.length === 0 ? (

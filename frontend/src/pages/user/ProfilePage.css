@@ -1,84 +1,247 @@
-.profile-page { padding-top: var(--space-10); padding-bottom: var(--space-20); }
+.profile-page {
+  padding-top: 40px;
+  padding-bottom: 80px;
+  background: #fff;
+}
 
 .profile-layout {
   display: grid;
   grid-template-columns: 260px 1fr;
-  gap: var(--space-10);
-  align-items: start;
+  gap: 40px;
+  border-top: 1px solid #eaeaec;
+  padding-top: 30px;
 }
 
-/* Sidebar */
+/* Sidebar Styling */
 .profile-sidebar {
-  border: 1px solid #edeff2;
-  border-radius: 4px;
+  border-right: 1px solid #eaeaec;
+  padding-right: 20px;
 }
-.user-profile-summary {
-  padding: var(--space-6) var(--space-5);
-  border-bottom: 1px solid #edeff2;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+
+.sidebar-header {
+  padding: 0 0 24px 10px;
+  border-bottom: 1px solid #f5f5f6;
+  margin-bottom: 20px;
 }
+
 .user-avatar {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
+  background: #ff3f6c;
+  color: #fff;
   border-radius: 50%;
-  background: rgba(255, 63, 108, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 20px;
   font-weight: 700;
+  margin-bottom: 12px;
 }
-.user-info h4 { font-size: 14px; color: #282c3f; margin-bottom: 2px; }
-.user-info p { font-size: 11px; color: #7e818c; line-height: 1.2; }
 
-.profile-nav { display: flex; flex-direction: column; padding: var(--space-3) 0; }
+.user-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #282c3f;
+  margin: 0;
+}
+
+.user-email {
+  font-size: 12px;
+  color: #7e818c;
+  margin: 0;
+}
+
+.profile-nav .nav-group-title {
+  font-size: 11px;
+  color: #7e818c;
+  font-weight: 700;
+  margin: 15px 0 10px 10px;
+  text-transform: uppercase;
+}
+
 .nav-item {
-  background: none;
-  border: none;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 20px;
+  width: 100%;
+  padding: 12px 10px;
+  border: none;
+  background: none;
+  color: #282c3f;
   font-size: 14px;
-  color: #535766;
   cursor: pointer;
   text-align: left;
-  border-left: 3px solid transparent;
+  border-radius: 4px;
+  transition: all 0.2s;
 }
-.nav-item:hover { background: #f5f5f6; color: #282c3f; }
-.nav-item.active { border-left-color: #ff3f6c; color: #ff3f6c; font-weight: 700; background: #f5f5f6; }
-.nav-item.logout { color: #ff3f6c; margin-top: 12px; }
 
-/* Main */
-.profile-section { padding: var(--space-6) var(--space-8); }
-.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6); }
-.section-header h3 { font-size: 16px; font-weight: 700; color: #282c3f; }
+.nav-item:hover {
+  background: #f5f5f6;
+  color: #ff3f6c;
+}
 
-.btn-edit-details {
-  border: 1px solid #d4d5d9;
-  background: none;
-  padding: 6px 16px;
+.nav-item.active {
+  color: #ff3f6c;
+  font-weight: 700;
+  background: #ffebef;
+}
+
+.wallet-balance-tag {
+  margin-left: auto;
   font-size: 12px;
   font-weight: 700;
-  border-radius: 2px;
+  color: #03a685;
+}
+
+.divider-nav {
+  height: 1px;
+  background: #f5f5f6;
+  margin: 10px 0;
+}
+
+/* Main Content Styling */
+.wallet-highlight-card {
+  background: linear-gradient(135deg, #282c3f 0%, #3e4152 100%);
+  border-radius: 8px;
+  padding: 24px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.wallet-info .label {
+  font-size: 12px;
+  color: #94969f;
+  margin-bottom: 5px;
+}
+
+.wallet-info h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.btn-add-money {
+  background: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
 }
 
-.details-grid { display: flex; flex-direction: column; gap: var(--space-6); }
-.detail-row { display: flex; flex-direction: column; gap: 4px; }
-.detail-row span { font-size: 12px; color: #7e818c; }
-.detail-row p { font-size: 14px; color: #282c3f; font-weight: 600; }
+.btn-add-money:hover {
+  background: rgba(255,255,255,0.1);
+}
 
-/* Addresses */
-.address-cards-list { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+.profile-section h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #282c3f;
+  margin: 0;
+}
+
+.profile-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+  padding: 24px;
+  border: 1px solid #eaeaec;
+}
+
+.detail-item .label {
+  font-size: 12px;
+  color: #7e818c;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.detail-item .value {
+  font-size: 14px;
+  color: #282c3f;
+  font-weight: 500;
+}
+
+.address-row-card {
+  padding: 20px;
+  border: 1px solid #eaeaec;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.addr-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.addr-name {
+  font-weight: 700;
+  color: #282c3f;
+}
+
+.addr-badge {
+  font-size: 10px;
+  background: #f5f5f6;
+  padding: 2px 6px;
+  border-radius: 10px;
+  color: #7e818c;
+}
+
+.addr-body {
+  font-size: 13px;
+  color: #282c3f;
+  margin-bottom: 6px;
+}
+
+.addr-contact {
+  font-size: 13px;
+  color: #7e818c;
+}
+
+.addr-contact span {
+  color: #282c3f;
+  font-weight: 500;
+}
+
+.addr-row-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.btn-text, .btn-text-primary {
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-text { color: #282c3f; }
+.btn-text-primary { color: #ff3f6c; }
+
+.btn-add-address-small {
+  background: none;
+  border: 1px solid #eaeaec;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ff3f6c;
+  cursor: pointer;
+}
 .profile-address-card { padding: var(--space-5); position: relative; }
 .addr-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .addr-actions { display: flex; gap: 16px; margin-top: 16px; padding-top: 12px; border-top: 1px solid #f5f5f6; }
 .addr-actions button { background: none; border: none; font-size: 12px; font-weight: 700; color: #535766; cursor: pointer; }
-.btn-delete { color: #ff3f6c !important; }
-
 .btn-add-address {
   background: none;
   border: 1px solid #282c3f;

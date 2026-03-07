@@ -63,34 +63,41 @@ const WishlistPage: React.FC = () => {
 
       {items.length === 0 ? (
         <div className="empty-wishlist">
+           <div className="empty-icon-circle">❤️</div>
            <h3>YOUR WISHLIST IS EMPTY</h3>
            <p>Add items that you like to your wishlist. Review them anytime and easily move them to the bag.</p>
            <Link to="/shop" className="btn-continue">CONTINUE SHOPPING</Link>
         </div>
       ) : (
         <div className="wishlist-grid">
-          {items.map((item) => (
-            <div key={item._id} className="wishlist-card">
-              <div className="wishlist-img-box">
-                <img src={item.variants?.[0]?.images?.[0] || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=200'} alt={item.name} />
-                <button className="btn-remove-wishlist" onClick={() => handleRemove(item._id)}>
-                   <X size={18} />
+          {items.map((item) => {
+            const variant = item.variants?.[0];
+            const price = variant?.price || item.basePrice;
+            const brandName = typeof item.brand === 'object' ? (item.brand as any).name : item.brand;
+            
+            return (
+              <div key={item._id} className="wishlist-card">
+                <div className="wishlist-img-box">
+                  <img src={variant?.images?.[0] || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=300'} alt={item.name} />
+                  <button className="btn-remove-wishlist" onClick={() => handleRemove(item._id)}>
+                     <X size={20} />
+                  </button>
+                </div>
+                <div className="wishlist-info">
+                  <p className="item-brand">{brandName?.toUpperCase() || 'E-FASHION'}</p>
+                  <p className="item-name text-truncate">{item.name}</p>
+                  <p className="item-price">
+                     <span className="price-now">₹{Math.floor(price)}</span>
+                     <span className="price-mrp">₹{Math.floor(price * 1.5)}</span>
+                     <span className="price-disc">(33% OFF)</span>
+                  </p>
+                </div>
+                <button className="btn-move-to-bag" onClick={() => handleMoveToBag(item)}>
+                   MOVE TO BAG
                 </button>
               </div>
-              <div className="wishlist-info">
-                <p className="item-brand">{item.brand || 'Suruchi Fashion'}</p>
-                <p className="item-name">{item.name}</p>
-                <p className="item-price">
-                   <span className="price-now">₹{item.variants?.[0]?.price}</span>
-                   <span className="price-mrp">₹{Math.floor((item.variants?.[0]?.price || 0) * 1.5)}</span>
-                   <span className="price-disc">(50% OFF)</span>
-                </p>
-              </div>
-              <button className="btn-move-to-bag" onClick={() => handleMoveToBag(item)}>
-                 MOVE TO BAG
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

@@ -15,11 +15,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle 401 globally — redirect to login
+// Handle 401 globally — redirect to login (except for auth requests)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const isAuthRequest = error.config?.url?.includes('/auth/');
+    const isLoginPage = window.location.pathname === '/login';
+
+    if (error.response?.status === 401 && !isAuthRequest && !isLoginPage) {
       localStorage.removeItem('authToken');
       window.location.href = '/login';
     }

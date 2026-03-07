@@ -38,20 +38,27 @@ const AdminProducts: React.FC = () => {
               {products.map((p) => (
                 <tr key={p._id}>
                   <td>
-                    <div className="flex items-center gap-2">
-                      <div style={{width:40,height:40,borderRadius:8,background:'var(--color-surface-alt)',overflow:'hidden'}}>
-                        <img src={p.variants?.[0]?.images?.[0] || 'https://placehold.co/40'} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}} />
+                    <div className="flex items-center gap-3">
+                      <div className="admin-product-img">
+                        <img src={p.variants?.[0]?.images?.[0] || 'https://placehold.co/40x50'} alt="" />
                       </div>
-                      <span className="font-medium text-sm">{p.name}</span>
+                      <div>
+                        <p className="font-bold text-sm mb-1">{p.name}</p>
+                        <p className="text-[10px] text-soft uppercase tracking-wider">{(p.categoryId as any)?.name || '—'}</p>
+                      </div>
                     </div>
                   </td>
-                  <td className="text-sm text-soft">{p.brand}</td>
-                  <td className="font-semibold">₹{p.basePrice.toLocaleString('en-IN')}</td>
-                  <td><span className={`badge ${p.is_deleted ? 'badge-error' : 'badge-success'}`}>{p.is_deleted ? 'Deleted' : 'Active'}</span></td>
+                  <td className="text-sm text-soft">{(p.brand as any)?.name || p.brand}</td>
+                  <td className="font-bold text-dark">₹{p.basePrice.toLocaleString('en-IN')}</td>
                   <td>
-                    <div className="flex gap-2">
-                      <Link to={`/admin/products/${p._id}/edit`} className="btn btn-outline btn-sm"><Edit2 size={14} /></Link>
-                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(p._id)}><Trash2 size={14} /></button>
+                    <span className={`badge ${p.is_deleted ? 'badge-error' : 'badge-success'}`}>
+                      {p.is_deleted ? 'Trash' : 'Live'}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="actions">
+                      <Link to={`/admin/products/${p._id}/edit`} title="Edit Product"><Edit2 size={16} /></Link>
+                      <button className="delete" onClick={() => handleDelete(p._id)} title="Delete"><Trash2 size={16} /></button>
                     </div>
                   </td>
                 </tr>

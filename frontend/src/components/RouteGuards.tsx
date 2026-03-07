@@ -18,9 +18,16 @@ export const AdminRoute: React.FC = () => {
   return <Outlet />;
 };
 
-// Blocks authenticated users from reaching login/register pages
+// Blocks authenticated users from reaching login/register pages (unless profile is incomplete)
 export const GuestRoute: React.FC = () => {
   const { user, isLoading } = useAuth();
   if (isLoading) return <div className="page-loader"><div className="spinner" /></div>;
-  return !user ? <Outlet /> : <Navigate to="/" replace />;
+  
+  // If user exists and profile is complete, redirect to home
+  if (user && user.is_profile_complete) {
+    return <Navigate to="/" replace />;
+  }
+  
+  // Otherwise (no user OR incomplete profile), allow access to login/register/UnifiedAuth
+  return <Outlet />;
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, LogOut, Package, Plus } from 'lucide-react';
+import { User, LogOut, Package } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getAddressesApi, deleteAddressApi } from '../../api/userApi';
 import { toast } from '../../hooks/useToast';
@@ -38,57 +38,97 @@ const ProfilePage: React.FC = () => {
     <div className="profile-page container">
       <div className="profile-layout">
         <aside className="profile-sidebar">
-          <div className="user-profile-summary">
-             <div className="user-avatar text-primary">{(user?.name || 'U')[0]}</div>
-             <div className="user-info">
-                <h4>{user?.name}</h4>
-                <p>{user?.email}</p>
+          <div className="sidebar-header">
+             <div className="user-avatar">{(user?.name || 'U')[0]}</div>
+             <div className="user-meta">
+                <p className="user-name">{user?.name}</p>
+                <p className="user-email">{user?.email}</p>
              </div>
           </div>
           <nav className="profile-nav">
-             <button className="nav-item active"><User size={18} /> Profile Details</button>
-             <button className="nav-item" onClick={() => navigate('/orders')}><Package size={18} /> My Orders</button>
-             <button className="nav-item logout" onClick={handleLogout}><LogOut size={18} /> Logout</button>
+             <div className="nav-group">
+                <p className="nav-group-title">OVERVIEW</p>
+                <button className="nav-item active"><User size={16} /> Profile</button>
+                <button className="nav-item" onClick={() => navigate('/orders')}><Package size={16} /> Orders & Returns</button>
+             </div>
+             <div className="divider-nav" />
+             <div className="nav-group">
+                <p className="nav-group-title">PAYMENTS</p>
+                <button className="nav-item"><div className="wallet-icon-small" /> Wallet <span className="wallet-balance-tag">₹{user?.wallet || 0}</span></button>
+                <button className="nav-item">Saved Cards</button>
+             </div>
+             <div className="divider-nav" />
+             <button className="nav-item logout" onClick={handleLogout}><LogOut size={16} /> Logout</button>
           </nav>
         </aside>
 
         <main className="profile-main">
+          {/* Wallet Summary Card */}
+          <section className="profile-section-simple">
+             <div className="wallet-highlight-card">
+                <div className="wallet-info">
+                   <p className="label">E-FASHION WALLET Balance</p>
+                   <h2>₹{user?.wallet || 0}</h2>
+                </div>
+                <button className="btn-add-money">ADD MONEY</button>
+             </div>
+          </section>
+
           {/* Profile Details Section */}
-          <section className="profile-section card">
+          <section className="profile-section card-no-border">
             <div className="section-header">
                <h3>Profile Details</h3>
-               <button className="btn-edit-details">EDIT</button>
+               <button className="btn-edit-text">EDIT</button>
             </div>
-            <div className="details-grid">
-               <div className="detail-row"><span>Full Name</span><p>{user?.name}</p></div>
-               <div className="detail-row"><span>Email ID</span><p>{user?.email}</p></div>
-               <div className="detail-row"><span>Mobile Number</span><p>{user?.mobile || 'Not provided'}</p></div>
+            <div className="profile-details-grid">
+               <div className="detail-item">
+                  <span className="label">Full Name</span>
+                  <p className="value">{user?.name}</p>
+               </div>
+               <div className="detail-item">
+                  <span className="label">Email ID</span>
+                  <p className="value">{user?.email}</p>
+               </div>
+               <div className="detail-item">
+                  <span className="label">Mobile Number</span>
+                  <p className="value">{user?.mobile || 'Not provided'}</p>
+               </div>
+               <div className="detail-item">
+                  <span className="label">Gender</span>
+                  <p className="value">{user?.gender || 'Not specified'}</p>
+               </div>
             </div>
           </section>
 
           {/* Addresses Section */}
-          <section className="profile-section mt-8">
-             <div className="section-header mb-6">
-                <h3>Manage Addresses</h3>
-                <button className="btn-add-address" onClick={() => navigate('/checkout')}><Plus size={14} /> ADD NEW ADDRESS</button>
+          <section className="profile-section mt-10">
+             <div className="section-header mb-4">
+                <h3>Default Address</h3>
+                <button className="btn-add-address-small" onClick={() => navigate('/checkout')}>ADD NEW ADDRESS</button>
              </div>
-             <div className="address-cards-list">
-                {addresses.map(addr => (
-                  <div key={addr._id} className="profile-address-card card">
-                    <div className="addr-card-header">
-                       <span className="customer-name">{addr.fullName}</span>
-                       <span className="type-badge">{addr.isDefault ? 'DEFAULT' : 'HOME'}</span>
+             <div className="address-list-compact">
+                {addresses.length > 0 ? (
+                  addresses.map(addr => (
+                    <div key={addr._id} className="address-row-card">
+                      <div className="addr-main">
+                         <div className="addr-top">
+                            <span className="addr-name">{addr.fullName}</span>
+                            <span className="addr-badge">{addr.isDefault ? 'DEFAULT' : 'HOME'}</span>
+                         </div>
+                         <p className="addr-body">{addr.houseName}, {addr.locality}, {addr.city}, {addr.state} - {addr.pincode}</p>
+                         <p className="addr-contact">Mobile: <span>{addr.mobile}</span></p>
+                      </div>
+                      <div className="addr-row-actions">
+                         <button className="btn-text" onClick={() => removeAddress(addr._id)}>REMOVE</button>
+                         <button className="btn-text-primary">EDIT</button>
+                      </div>
                     </div>
-                    <p className="addr-text">{addr.houseName}, {addr.locality}</p>
-                    <p className="addr-text">{addr.city}, {addr.state} - {addr.pincode}</p>
-                    <p className="addr-mobile">Mobile: <span>{addr.mobile}</span></p>
-                    <div className="addr-actions">
-                       <button className="btn-edit" onClick={() => toast.info('Edit address coming soon')}>EDIT</button>
-                       <button className="btn-delete" onClick={() => removeAddress(addr._id)}>REMOVE</button>
-                    </div>
+                  ))
+                ) : (
+                  <div className="empty-addresses">
+                     <p>No saved addresses found. Add one to speed up checkout.</p>
                   </div>
-                ))}
-                {addresses.length === 0 && <p className="text-soft text-sm">No saved addresses found.</p>}
+                )}
              </div>
           </section>
         </main>
