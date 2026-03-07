@@ -5,6 +5,8 @@ import { Category } from '../../models/categoryModel';
 import { Order } from '../../models/orderModel';
 import { User } from '../../models/userModel';
 import { Coupon } from '../../models/couponModel';
+import { Brand } from '../../models/brandModel';
+import { Banner } from '../../models/bannerModel';
 import { uploadToCloudinary } from '../../middlewares/uploadMiddleware';
 import * as adminService from '../../services/adminService';
 import { HTTP } from '../../utils/statuscodes';
@@ -105,8 +107,53 @@ export const addVariant = async (req: Request, res: Response, next: NextFunction
   } catch (err) { next(err); }
 };
 
-// ─── Categories ───────────────────────────────────────────────────────────────
+export const updateVariant = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const variantId = req.params.id as string;
+    const { size, shadeName, shadeHex, price, discountPrice, stock, is_deleted } = req.body;
+    const updateData: any = { size, shadeName, shadeHex, price, discountPrice, stock, is_deleted };
+
+    const files = (req.files as Express.Multer.File[]) || [];
+    if (files.length > 0) {
+      const variant = await Variant.findById(variantId);
+      if (!variant) return next(new AppError('Variant not found', HTTP.NOT_FOUND));
+      const imageUrls: string[] = await Promise.all(
+        files.map((f) => uploadToCloudinary(f.buffer, `suruchi/products/${variant.productId}`))
+      );
+      updateData.images = imageUrls;
+    }
+
+    const variant = await Variant.findByIdAndUpdate(variantId, { $set: updateData }, { new: true });
+    if (!variant) return next(new AppError('Variant not found', HTTP.NOT_FOUND));
+
+    logAdminAction(req.user, 'UPDATE_VARIANT', variantId, updateData);
+    res.status(HTTP.OK).json({ success: true, variant });
+  } catch (err) { next(err); }
+};
+
+export const deleteVariant = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const variantId = req.params.id as string;
+    const variant = await Variant.findByIdAndUpdate(variantId, { is_deleted: true }, { new: true });
+    if (!variant) return next(new AppError('Variant not found', HTTP.NOT_FOUND));
+
+    // Remove variant from product reference
+    await Product.findByIdAndUpdate(variant.productId, { $pull: { variants: variantId } });
+
+    logAdminAction(req.user, 'DELETE_VARIANT', variantId);
+    res.status(HTTP.OK).json({ success: true, message: 'Variant deleted' });
+  } catch (err) { next(err); }
+};
+
+export const getCategories = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const categories = await Category.find({ is_deleted: false }).sort({ name: 1 });
+    res.status(HTTP.OK).json({ success: true, categories });
+  } catch (err) { next(err); }
+};
+
 export const createCategory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+// ... existing code ...
   try {
     const files = (req.files as Express.Multer.File[]) || [];
     let image = '';
@@ -242,6 +289,91 @@ export const getSalesReport = async (req: Request, res: Response, next: NextFunc
     const to = new Date((req.query.to as string) || new Date());
     const data = await adminService.getSalesReport(from, to);
     res.status(HTTP.OK).json({ success: true, data });
+  } catch (err) { next(err); }
+};
+
+// ─── Brands ───────────────────────────────────────────────────────────────────
+export const getBrands = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const brands = await Brand.find({ is_deleted: false }).sort({ name: 1 });
+    res.status(HTTP.OK).json({ success: true, brands });
+  } catch (err) { next(err); }
+};
+
+export const createBrand = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const files = (req.files as Express.Multer.File[]) || [];
+    let logo = '';
+    if (files.length > 0) {
+      logo = await uploadToCloudinary(files[0].buffer, 'suruchi/brands');
+    }
+    const { name, description } = req.body;
+    const brand = await Brand.create({ name, description, logo });
+    logAdminAction(req.user, 'CREATE_BRAND', (brand._id as any).toString(), { name });
+    res.status(HTTP.CREATED).json({ success: true, brand });
+  } catch (err) { next(err); }
+};
+
+export const updateBrand = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const brandId = req.params.id as string;
+    const { name, description } = req.body;
+    const updateData: any = { name, description };
+    
+    const files = (req.files as Express.Multer.File[]) || [];
+    if (files.length > 0) {
+      updateData.logo = await uploadToCloudinary(files[0].buffer, 'suruchi/brands');
+    }
+
+    const brand = await Brand.findByIdAndUpdate(brandId, { $set: updateData }, { new: true });
+    if (!brand) return next(new AppError('Brand not found', HTTP.NOT_FOUND));
+
+    logAdminAction(req.user, 'UPDATE_BRAND', brandId, updateData);
+    res.status(HTTP.OK).json({ success: true, brand });
+  } catch (err) { next(err); }
+};
+
+export const deleteBrand = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const brandId = req.params.id as string;
+    const brand = await Brand.findByIdAndUpdate(brandId, { is_deleted: true });
+    if (!brand) return next(new AppError('Brand not found', HTTP.NOT_FOUND));
+
+    logAdminAction(req.user, 'DELETE_BRAND', brandId);
+    res.status(HTTP.OK).json({ success: true, message: 'Brand deleted' });
+  } catch (err) { next(err); }
+};
+
+// ─── Banners ──────────────────────────────────────────────────────────────────
+export const getBanners = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const banners = await Banner.find().sort({ priority: -1 });
+    res.status(HTTP.OK).json({ success: true, banners });
+  } catch (err) { next(err); }
+};
+
+export const createBanner = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const files = (req.files as Express.Multer.File[]) || [];
+    if (files.length === 0) return next(new AppError('Banner image is required', HTTP.BAD_REQUEST));
+    
+    const image = await uploadToCloudinary(files[0].buffer, 'suruchi/banners');
+    const { title, description, link, priority } = req.body;
+    
+    const banner = await Banner.create({ image, title, description, link, priority });
+    logAdminAction(req.user, 'CREATE_BANNER', (banner._id as any).toString());
+    res.status(HTTP.CREATED).json({ success: true, banner });
+  } catch (err) { next(err); }
+};
+
+export const deleteBanner = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const bannerId = req.params.id as string;
+    const banner = await Banner.findByIdAndDelete(bannerId);
+    if (!banner) return next(new AppError('Banner not found', HTTP.NOT_FOUND));
+
+    logAdminAction(req.user, 'DELETE_BANNER', bannerId);
+    res.status(HTTP.OK).json({ success: true, message: 'Banner deleted' });
   } catch (err) { next(err); }
 };
 

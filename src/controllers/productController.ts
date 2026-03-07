@@ -5,10 +5,16 @@ import { HTTP } from '../utils/statuscodes';
 
 export const getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { q, category, sort, page, limit } = req.query;
+    const { q, category, brand, minPrice, maxPrice, color, discount, rating, sort, page, limit } = req.query;
     const result = await productService.listProducts({
       q: q as string,
       category: category as string,
+      brand: brand as string | string[],
+      minPrice: minPrice ? parseFloat(minPrice as string) : undefined,
+      maxPrice: maxPrice ? parseFloat(maxPrice as string) : undefined,
+      color: color as string | string[],
+      discount: discount ? parseFloat(discount as string) : undefined,
+      rating: rating ? parseFloat(rating as string) : undefined,
       sort: sort as string,
       page: page ? parseInt(page as string) : 1,
       limit: limit ? parseInt(limit as string) : 20,

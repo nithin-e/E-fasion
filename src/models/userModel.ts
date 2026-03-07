@@ -13,7 +13,9 @@ const userSchema = new Schema<IUser>(
     is_blocked: { type: Boolean, default: false },
     is_deleted: { type: Boolean, default: false },
     wishlist: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+    wallet: { type: Number, default: 0 },
     fcmToken: { type: String },
+    is_profile_complete: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

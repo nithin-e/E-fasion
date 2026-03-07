@@ -6,12 +6,14 @@ const productSchema = new Schema<IProduct>(
   {
     name: { type: String, required: true, trim: true },
     slug: { type: String, unique: true },
-    brand: { type: String, required: true, trim: true },
+    brand: { type: Schema.Types.ObjectId, ref: 'Brand', required: true, index: true },
     description: { type: String, required: true },
     highlights: [{ type: String }],
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: true, index: true },
     basePrice: { type: Number, required: true, min: 0 },
     variants: [{ type: Schema.Types.ObjectId, ref: 'Variant' }],
+    avgRating: { type: Number, default: 0, min: 0, max: 5 },
+    numReviews: { type: Number, default: 0 },
     is_deleted: { type: Boolean, default: false },
   },
   { timestamps: true }

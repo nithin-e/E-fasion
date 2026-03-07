@@ -12,7 +12,9 @@ export interface IUser extends Document {
   is_blocked: boolean;
   is_deleted: boolean;
   wishlist: Types.ObjectId[];
+  wallet: number;                 // Added wallet balance
   fcmToken?: string;
+  is_profile_complete: boolean;   // To track if new user filled details
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidate: string): Promise<boolean>;
@@ -71,12 +73,14 @@ export interface IProduct extends Document {
   _id: Types.ObjectId;
   name: string;
   slug: string;
-  brand: string;
+  brand: Types.ObjectId | IBrand;  // Changed to Ref
   description: string;
   highlights: string[];
   category: Types.ObjectId | ICategory;
   basePrice: number;
   variants: IVariant[];
+  avgRating: number;               // Added for rating system
+  numReviews: number;              // Added for rating system
   is_deleted: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -154,4 +158,36 @@ export interface IOrder extends Document {
   couponCode?: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+// ─── Brand ────────────────────────────────────────────────────────────────────
+export interface IBrand extends Document {
+  _id: Types.ObjectId;
+  name: string;
+  slug: string;
+  logo: string;
+  description?: string;
+  is_deleted: boolean;
+}
+
+// ─── Review ───────────────────────────────────────────────────────────────────
+export interface IReview extends Document {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId | IUser;
+  productId: Types.ObjectId | IProduct;
+  rating: number;                // 1-5
+  comment: string;
+  is_deleted: boolean;
+  createdAt: Date;
+}
+
+// ─── Banner ───────────────────────────────────────────────────────────────────
+export interface IBanner extends Document {
+  _id: Types.ObjectId;
+  image: string;
+  link: string;                  // URL or Category/Product slug
+  title?: string;
+  description?: string;
+  isActive: boolean;
+  priority: number;              // For sorting
 }
