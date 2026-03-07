@@ -1,0 +1,90 @@
+.orders-page { padding-top: var(--space-4); padding-bottom: var(--space-20); }
+.orders-header { margin-bottom: var(--space-10); }
+.orders-header h1 { font-size: 18px; font-weight: 700; color: #282c3f; }
+
+.orders-list-v2 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.order-group-card {
+  border: 1px solid #eaeaec;
+  border-radius: 4px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.order-group-header {
+  padding: var(--space-4) var(--space-5);
+  background: rgba(245,245,246,0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eaeaec;
+}
+
+.order-main-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.order-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.order-status-dot[data-status="delivered"] { background: #03a685; }
+.order-status-dot[data-status="shipped"], 
+.order-status-dot[data-status="dispatched"] { background: #ff905a; }
+.order-status-dot[data-status="placed"] { background: #20bd99; }
+.order-status-dot[data-status="pending"] { background: #ffc107; }
+
+.order-status-text { font-size: 14px; font-weight: 700; color: #282c3f; }
+.order-date { font-size: 14px; color: #7e818c; }
+
+.btn-v-details {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+}
+
+.order-products-grid {
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.order-item-row {
+  display: flex;
+  gap: var(--space-4);
+}
+.order-item-img {
+  width: 64px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #f5f5f6;
+  flex-shrink: 0;
+}
+.order-item-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.order-item-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.item-brand { font-size: 14px; font-weight: 700; color: #282c3f; margin-bottom: 2px; }
+.item-name { font-size: 14px; color: #535766; margin-bottom: 4px; }
+.item-meta { font-size: 12px; color: #7e818c; }
+
+@media (max-width: 768px) {
+  .order-group-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .btn-v-details { margin-top: 4px; }
+}

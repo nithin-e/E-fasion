@@ -1,0 +1,117 @@
+.order-details-page { padding-top: var(--space-4); padding-bottom: var(--space-20); }
+
+.order-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-8);
+}
+.order-id-meta h1 { font-size: 16px; font-weight: 700; color: #282c3f; margin-bottom: 4px; }
+.order-id-meta p { font-size: 14px; color: #7e818c; }
+.btn-help {
+  background: none;
+  border: 1px solid #d4d5d9;
+  color: #282c3f;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.order-details-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* Stepper */
+.order-stepper {
+  padding: var(--space-10) var(--space-6);
+  margin-bottom: var(--space-4);
+}
+.stepper-track {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: var(--space-8);
+}
+.stepper-track::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 30px;
+  right: 30px;
+  height: 2px;
+  background: #edeff2;
+  z-index: 1;
+}
+.step-item {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  flex: 1;
+}
+.step-point {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #edeff2;
+  margin: 0 auto 12px;
+  border: 2px solid #fff;
+}
+.step-item.active .step-point { background: #03a685; }
+.step-item.current .step-point { 
+  background: #03a685; 
+  box-shadow: 0 0 0 4px rgba(3, 166, 133, 0.2);
+}
+.step-label { font-size: 11px; font-weight: 700; color: #bfc0c6; display: block; }
+.step-item.active .step-label { color: #282c3f; }
+
+.stepper-info { border-top: 1px solid #f5f5f6; padding-top: 16px; font-size: 14px; color: #535766; }
+
+/* Product Row */
+.order-product-card { padding: var(--space-4); margin-bottom: var(--space-4); }
+.order-p-row { display: flex; gap: 16px; border-bottom: 1px solid #f5f5f6; padding-bottom: 16px; margin-bottom: 16px; }
+.order-p-row:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+.order-p-img { width: 64px; height: 85px; border-radius: 2px; background: #f5f5f6; flex-shrink: 0; }
+.order-p-img img { width: 100%; height: 100%; object-fit: cover; }
+.order-p-info .item-brand { font-size: 14px; font-weight: 700; color: #282c3f; }
+.order-p-info .item-name { font-size: 14px; color: #535766; }
+.order-p-info .item-meta { font-size: 12px; color: #7e818c; margin-top: 4px; }
+.order-p-info .item-price { font-size: 14px; font-weight: 700; color: #282c3f; margin-top: 8px; }
+
+/* Map */
+.order-map-section { overflow: hidden; }
+.map-header { padding: 12px 20px; font-size: 12px; font-weight: 700; color: #282c3f; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f5f5f6; }
+.live-dot { width: 8px; height: 8px; background: #ff3f6c; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
+
+/* Right Summary */
+.address-summary { padding: var(--space-5); margin-bottom: var(--space-4); }
+.address-summary h4 { font-size: 12px; font-weight: 700; color: #7e818c; margin-bottom: 12px; text-transform: uppercase; }
+.addr-name { font-size: 14px; font-weight: 700; color: #282c3f; margin-bottom: 4px; }
+.addr-text { font-size: 14px; color: #535766; line-height: 1.4; }
+.addr-mobile { font-size: 13px; color: #535766; margin-top: 12px; }
+
+.price-summary { padding: var(--space-5); }
+.price-summary h4 { font-size: 12px; font-weight: 700; color: #7e818c; margin-bottom: 16px; text-transform: uppercase; }
+.price-summary .p-row { display: flex; justify-content: space-between; font-size: 14px; color: #535766; margin-bottom: 10px; }
+.price-summary .p-divider { height: 1px; background: #edeff2; margin: 12px 0; }
+.price-summary .total { font-weight: 700; color: #282c3f; font-size: 16px; }
+
+.payment-status-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-top: 16px;
+}
+.payment-status-badge[data-status="paid"] { background: #e6f6f2; color: #03a685; }
+.payment-status-badge[data-status="pending"] { background: #fff9e6; color: #ff905a; }
+
+@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+@media (max-width: 768px) {
+  .order-details-layout { grid-template-columns: 1fr; }
+}
