@@ -1,11 +1,38 @@
 // Centralized TypeScript types for the Suruchi Fashion API
 
+export interface SavedCard {
+  _id?: string;
+  cardType: string;
+  cardNumber: string; // Masked e.g. **** **** **** 1234
+  nameOnCard?: string;
+  cardName?: string; // Sometimes used as alias
+  expiry: string;
+}
+
+export interface SavedUPI {
+  _id?: string;
+  upiId: string;
+  appName: string;
+}
+
+export interface SavedWallet {
+  _id?: string;
+  walletName: string;
+  linkedNumber: string;
+}
+
 export interface User {
   _id: string;
   name: string;
   email: string;
   mobile: string;
   gender?: 'Male' | 'Female' | 'Other';
+  birthday?: string | Date;
+  alternateMobile?: string;
+  mynCash?: number;
+  savedCards?: SavedCard[];
+  savedUPI?: SavedUPI[];
+  savedWallets?: SavedWallet[];
   role: 'user' | 'admin';
   is_verified: boolean;
   is_blocked: boolean;

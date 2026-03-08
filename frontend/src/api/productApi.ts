@@ -2,7 +2,7 @@ import api from './axios';
 
 export const getProductsApi = (params: {
   q?: string;
-  category?: string;
+  category?: string | string[];
   brand?: string | string[];
   minPrice?: number;
   maxPrice?: number;

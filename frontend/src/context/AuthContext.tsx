@@ -14,6 +14,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   setUser: (user: User | null) => void;
   setToken: (token: string | null) => void;
+  refetchUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -88,7 +89,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider value={{ 
       user, token, isLoading, 
       sendOtp, verifyOtp, completeSignup, logout, 
-      setUser, setToken: persistToken 
+      setUser, setToken: persistToken,
+      refetchUser: fetchProfile
     }}>
       {children}
     </AuthContext.Provider>

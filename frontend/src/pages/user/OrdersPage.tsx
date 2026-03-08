@@ -31,14 +31,16 @@ const OrdersPage: React.FC = () => {
       ) : (
         <div className="orders-list-v2">
           {orders.map((order) => (
-            <div key={order._id} className="order-group-card">
+            <div key={order._id} className="order-group-card" onClick={() => window.location.href = `/orders/${order._id}`}>
               <div className="order-group-header">
                  <div className="order-main-info">
                     <span className="order-status-dot" data-status={order.orderStatus}></span>
                     <span className="order-status-text">{order.orderStatus.toUpperCase()}</span>
-                    <span className="order-date">On {new Date(order.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</span>
+                    <span className="order-date">On {new Date(order.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                  </div>
-                 <Link to={`/orders/${order._id}`} className="btn-v-details">VIEW DETAILS <ChevronRight size={14} /></Link>
+                 <Link to={`/orders/${order._id}`} className="btn-v-details" onClick={(e) => e.stopPropagation()}>
+                    VIEW DETAILS
+                 </Link>
               </div>
 
               <div className="order-products-grid">
@@ -53,7 +55,13 @@ const OrdersPage: React.FC = () => {
                       <div className="order-item-info">
                          <h4 className="item-brand">{prod?.brand || 'Suruchi Fashion'}</h4>
                          <p className="item-name">{prod?.name || 'Women Fashion'}</p>
-                         <p className="item-meta">Size: {variant?.size} · Qty: {p.quantity}</p>
+                         <div className="item-meta">
+                            <span>Size: {variant?.size}</span>
+                            <span>Qty: {p.quantity}</span>
+                         </div>
+                      </div>
+                      <div className="item-arrow">
+                         <ChevronRight size={24} />
                       </div>
                     </div>
                   );

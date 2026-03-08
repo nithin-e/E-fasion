@@ -1,0 +1,69 @@
+.map-selector-container.split-pane-style {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.map-search-overlay {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 1000; /* Leaflet tiles are ~400 */
+}
+
+.map-search-form {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  gap: 10px;
+}
+
+.map-search-form input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #282c3f;
+}
+
+.map-search-form button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ff3f6c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-search-form button:disabled {
+  color: #d4d5d9;
+  cursor: not-allowed;
+}
+
+.map-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.map-overlay-instructions {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #282c3f;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 1000;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  white-space: nowrap;
+}

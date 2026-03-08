@@ -91,7 +91,7 @@ const AdminBrands: React.FC = () => {
             {brands.map((brand) => (
               <tr key={brand._id}>
                 <td>
-                  <div style={{ width: '50px', height: '50px', background: '#f9f9f9', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyCenter: 'center', overflow: 'hidden', border: '1px solid #f0f0f5' }}>
+                  <div style={{ width: '50px', height: '50px', background: '#f9f9f9', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid #f0f0f5' }}>
                     {brand.logo ? (
                       <img src={brand.logo} alt={brand.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     ) : (

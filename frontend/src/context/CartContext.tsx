@@ -24,7 +24,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       const res = await getCartApi();
-      setItems(res.data.cart?.products || []);
+      setItems(res.data.cart?.items || []);
     } catch {
       setItems([]);
     } finally {

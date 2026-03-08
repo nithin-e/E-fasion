@@ -1,0 +1,57 @@
+/* ProfileSidebar.css */
+.profile-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--color-border);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.sidebar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-group-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #535766;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.nav-item {
+  font-size: 15px;
+  color: #3e4152;
+  text-decoration: none;
+  padding: 4px 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: none;
+  border: none;
+  text-align: left;
+}
+
+.nav-item:hover, .nav-item.active {
+  color: #ff3f6c;
+  font-weight: 700;
+}
+
+.divider-nav {
+  height: 1px;
+  background: var(--color-border);
+  margin: 4px 0;
+}
+
+.text-danger {
+  color: #ff3f6c;
+}

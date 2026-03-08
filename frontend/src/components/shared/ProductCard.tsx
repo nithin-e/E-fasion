@@ -20,6 +20,7 @@ const ProductCard: React.FC<Props> = ({ product }) => {
 
   const handleWishlist = async (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     try {
       await addToWishlistApi(product._id);
       toast.success('Added to wishlist!');

@@ -1,11 +1,34 @@
 import mongoose, { Document, Types } from 'mongoose';
 
 // ─── User ─────────────────────────────────────────────────────────────────────
+export interface ISavedCard {
+  _id?: Types.ObjectId;
+  cardNumber: string; // Stored as masked string (e.g., **** 1234)
+  cardName: string;
+  expiry: string;
+  cardType: string;   // Visa, Mastercard, etc.
+}
+
+export interface ISavedUPI {
+  _id?: Types.ObjectId;
+  upiId: string;
+  appName?: string;
+}
+
+export interface ISavedWallet {
+  _id?: Types.ObjectId;
+  walletName: string;
+  linkedNumber: string;
+}
+
 export interface IUser extends Document {
   _id: Types.ObjectId;
   name: string;
   email: string;
   mobile: string;
+  alternateMobile?: string;
+  gender?: 'Male' | 'Female';
+  birthday?: Date;
   password: string;
   role: 'user' | 'admin';
   is_verified: boolean;
@@ -13,6 +36,10 @@ export interface IUser extends Document {
   is_deleted: boolean;
   wishlist: Types.ObjectId[];
   wallet: number;                 // Added wallet balance
+  mynCash: number;                // Myntra Cash feature
+  savedCards: ISavedCard[];
+  savedUPI: ISavedUPI[];
+  savedWallets: ISavedWallet[];
   fcmToken?: string;
   is_profile_complete: boolean;   // To track if new user filled details
   createdAt: Date;

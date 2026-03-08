@@ -10,6 +10,7 @@ import adminRoutes from './adminRoutes';
 import brandRoutes from './brandRoutes';
 import bannerRoutes from './bannerRoutes';
 import categoryRoutes from './categoryRoutes';
+import deliveryRoutes from './deliveryRoutes';
 
 const router = Router();
 
@@ -24,5 +25,6 @@ router.use('/admin', adminRoutes);
 router.use('/brands', brandRoutes);
 router.use('/banners', bannerRoutes);
 router.use('/categories', categoryRoutes);
+router.use('/delivery', deliveryRoutes);
 
 export default router;

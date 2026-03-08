@@ -1,0 +1,144 @@
+.profile-payments-pane {
+  background: #fff;
+  padding: 32px;
+  max-width: 800px;
+}
+
+.pane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pane-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #282c3f;
+}
+
+.btn-add-payment {
+  background: none;
+  border: 1px solid #d4d5d9;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #282c3f;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-add-payment:hover {
+  border-color: #282c3f;
+}
+
+.empty-payments {
+  font-size: 14px;
+  color: #7e818c;
+  margin-top: 16px;
+}
+
+.saved-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.payment-card-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #eaeaec;
+  border-radius: 4px;
+  transition: box-shadow 0.2s;
+}
+
+.payment-card-item:hover {
+  box-shadow: 0 4px 12px 0 rgba(0,0,0,.05);
+}
+
+.payment-card-icon {
+  width: 64px;
+  height: 40px;
+  background: #f5f5f6;
+  border: 1px solid #eaeaec;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #535766;
+  margin-right: 16px;
+}
+
+.payment-card-details {
+  flex: 1;
+}
+
+.payment-card-number {
+  font-size: 14px;
+  font-weight: 700;
+  color: #282c3f;
+  margin-bottom: 4px;
+}
+
+.payment-card-name {
+  font-size: 12px;
+  color: #7e818c;
+}
+
+.btn-remove-payment {
+  background: none;
+  border: none;
+  color: #ff3f6c;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.payment-form {
+  border: 1px solid #eaeaec;
+  border-radius: 4px;
+  padding: 24px;
+  background: #fdfdfd;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.payment-form-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.btn-save-payment {
+  background: #ff3f6c;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-save-payment:disabled {
+  background: #ffa8bd;
+}
+
+.btn-cancel-payment {
+  background: none;
+  border: 1px solid #d4d5d9;
+  color: #282c3f;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}

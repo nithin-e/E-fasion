@@ -1,12 +1,32 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { IUser } from '../types';
+import { IUser, ISavedCard, ISavedUPI, ISavedWallet } from '../types';
+
+const savedCardSchema = new Schema<ISavedCard>({
+  cardNumber: { type: String, required: true },
+  cardName: { type: String, required: true },
+  expiry: { type: String, required: true },
+  cardType: { type: String, required: true },
+});
+
+const savedUPISchema = new Schema<ISavedUPI>({
+  upiId: { type: String, required: true },
+  appName: { type: String },
+});
+
+const savedWalletSchema = new Schema<ISavedWallet>({
+  walletName: { type: String, required: true },
+  linkedNumber: { type: String, required: true },
+});
 
 const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true, trim: true, minlength: 2, maxlength: 60 },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     mobile: { type: String, required: true, unique: true, match: /^[0-9]{10}$/ },
+    alternateMobile: { type: String },
+    gender: { type: String, enum: ['Male', 'Female'] },
+    birthday: { type: Date },
     password: { type: String, required: true, select: false },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     is_verified: { type: Boolean, default: false },
@@ -14,6 +34,10 @@ const userSchema = new Schema<IUser>(
     is_deleted: { type: Boolean, default: false },
     wishlist: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
     wallet: { type: Number, default: 0 },
+    mynCash: { type: Number, default: 0 },
+    savedCards: [savedCardSchema],
+    savedUPI: [savedUPISchema],
+    savedWallets: [savedWalletSchema],
     fcmToken: { type: String },
     is_profile_complete: { type: Boolean, default: false },
   },

@@ -1,12 +1,14 @@
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Types } from 'mongoose';
 import { Product } from '../models/productModel';
+import { Category } from '../models/categoryModel';
+import { Brand } from '../models/brandModel';
 import { IProduct } from '../types';
 import { AppError } from '../middlewares/errorMiddleware';
 import { HTTP } from '../utils/statuscodes';
 
 interface ProductQuery {
   q?: string;
-  category?: string;
+  category?: string | string[];
   brand?: string | string[];
   minPrice?: number;
   maxPrice?: number;
@@ -23,11 +25,27 @@ export const listProducts = async (query: ProductQuery) => {
   const filter: any = { is_deleted: false };
 
   if (q) filter.$text = { $search: q };
-  if (category) filter.category = category;
+
+  if (category) {
+    const catArray = Array.isArray(category) ? category : category.split(',');
+    const isObjectId = catArray.every(c => Types.ObjectId.isValid(c));
+    if (isObjectId) {
+      filter.category = { $in: catArray };
+    } else {
+      const cats = await Category.find({ name: { $in: catArray } });
+      filter.category = { $in: cats.map(c => c._id) };
+    }
+  }
   
   if (brand) {
-    if (Array.isArray(brand)) filter.brand = { $in: brand };
-    else filter.brand = brand;
+    const brandArray = Array.isArray(brand) ? brand : brand.split(',');
+    const isObjectId = brandArray.every(b => Types.ObjectId.isValid(b));
+    if (isObjectId) {
+      filter.brand = { $in: brandArray };
+    } else {
+      const brands = await Brand.find({ name: { $in: brandArray } });
+      filter.brand = { $in: brands.map(b => b._id) };
+    }
   }
 
   if (minPrice !== undefined || maxPrice !== undefined) {

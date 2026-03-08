@@ -80,7 +80,7 @@ const OrderDetailPage: React.FC = () => {
       <div className="order-details-layout">
          <div className="order-details-main">
             {/* Status Stepper */}
-            <div className="order-stepper card">
+            <div className="order-stepper od-card">
                <div className="stepper-track">
                   {steps.map((step, idx) => (
                     <div key={step} className={`step-item ${idx <= currentStepIdx ? 'active' : ''} ${idx === currentStepIdx ? 'current' : ''}`}>
@@ -95,29 +95,32 @@ const OrderDetailPage: React.FC = () => {
             </div>
 
             {/* Product Card */}
-            <div className="order-product-card card">
-               {order.products.map((p, idx) => {
-                  const prod = p.productId as any;
-                  const variant = p.variantId as any;
-                  return (
-                    <div key={idx} className="order-p-row">
-                       <div className="order-p-img">
-                          <img src={variant?.images?.[0] || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=100'} alt="" />
-                       </div>
-                       <div className="order-p-info">
-                          <h4 className="item-brand">{prod?.brand || 'Suruchi Fashion'}</h4>
-                          <p className="item-name">{prod?.name || 'Women Fashion Item'}</p>
-                          <p className="item-meta">Size: {variant?.size} · Qty: {p.quantity}</p>
-                          <p className="item-price">₹{p.priceAtPurchase}</p>
-                       </div>
-                    </div>
-                  );
-               })}
+            <div className="od-card">
+               <div className="od-card-header">Items in this Order</div>
+               <div className="order-products-wrapper">
+                 {order.products.map((p, idx) => {
+                    const prod = p.productId as any;
+                    const variant = p.variantId as any;
+                    return (
+                      <div key={idx} className="order-p-row">
+                         <div className="order-p-img">
+                            <img src={variant?.images?.[0] || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=100'} alt="" />
+                         </div>
+                         <div className="order-p-info">
+                            <h4 className="item-brand">{prod?.brand || 'Suruchi Fashion'}</h4>
+                            <p className="item-name">{prod?.name || 'Women Fashion Item'}</p>
+                            <p className="item-meta">Size: {variant?.size} • Qty: {p.quantity}</p>
+                            <p className="item-price">₹{p.priceAtPurchase}</p>
+                         </div>
+                      </div>
+                    );
+                 })}
+               </div>
             </div>
 
             {/* Map Tracking */}
             {showMap && (
-               <div className="order-map-section card">
+               <div className="order-map-section">
                   <div className="map-header">
                      <span className="live-dot" /> LIVE TRACKING
                   </div>
@@ -128,7 +131,7 @@ const OrderDetailPage: React.FC = () => {
                         <>
                           <MapUpdater lat={agentPos[0]} lng={agentPos[1]} />
                           <Marker position={agentPos} icon={agentIcon}>
-                            <Popup>Delivery Agent is here!</Popup>
+                            <Popup>Delivery Agent!</Popup>
                           </Marker>
                         </>
                       )}
@@ -139,15 +142,15 @@ const OrderDetailPage: React.FC = () => {
          </div>
 
          <div className="order-details-summary">
-            <div className="address-summary card">
+            <div className="address-summary od-card">
                <h4>Delivery Address</h4>
                <p className="addr-name">{order.shippingAddress.fullName}</p>
                <p className="addr-text">{order.shippingAddress.houseName}, {order.shippingAddress.locality}</p>
                <p className="addr-text">{order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}</p>
-               <p className="addr-mobile">Phone: {order.shippingAddress.mobile}</p>
+               <p className="addr-mobile">Phone: <span>{order.shippingAddress.mobile}</span></p>
             </div>
 
-            <div className="price-summary card">
+            <div className="price-summary od-card">
                <h4>Total Price</h4>
                <div className="p-row"><span>Subtotal</span><span>₹{order.subTotal}</span></div>
                <div className="p-row"><span>Delivery Charge</span><span>₹{order.deliveryCharge}</span></div>

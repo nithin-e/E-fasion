@@ -68,7 +68,7 @@ const ProductDetailPage: React.FC = () => {
         {/* Product Info */}
         <div className="pdp-info">
           <div className="pdp-brand-area">
-             <h1 className="pdp-brand">{product.brand}</h1>
+             <h1 className="pdp-brand">{typeof product.brand === 'string' ? product.brand : product.brand.name}</h1>
              <h2 className="pdp-name">{product.name}</h2>
              <div className="pdp-rating-badge">
                 4.2 <Star size={14} fill="currentColor" /> | 2.5k Ratings
@@ -126,7 +126,7 @@ const ProductDetailPage: React.FC = () => {
              <h3>PRODUCT DETAILS</h3>
              <p className="pdp-description">{product.description}</p>
              <div className="pdp-spec-grid">
-                <div className="pdp-spec-item"><span>Brand</span><strong>{product.brand}</strong></div>
+                <div className="pdp-spec-item"><span>Brand</span><strong>{typeof product.brand === 'string' ? product.brand : product.brand.name}</strong></div>
                 <div className="pdp-spec-item"><span>Category</span><strong>Accessories</strong></div>
              </div>
           </div>

@@ -1,7 +1,10 @@
 .checkout-page {
   padding-bottom: 80px;
+  font-family: Assistant, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: #282c3f;
 }
 
+/* Myntra Checkout Header (Step Indicator) */
 .checkout-header {
   padding: 20px 0;
   display: flex;
@@ -9,60 +12,63 @@
   border-bottom: 1px solid #f5f5f6;
   margin-bottom: 30px;
 }
-
 .checkout-steps {
   display: flex;
   align-items: center;
   gap: 15px;
 }
-
 .checkout-steps .step {
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 3px;
-  color: #7e818c;
+  letter-spacing: 2px;
+  color: #696b79;
 }
-
 .checkout-steps .step.active { color: #20bd99; border-bottom: 2px solid #20bd99; padding-bottom: 2px; }
 .checkout-steps .step.visited { color: #20bd99; }
-
 .step-line {
   width: 50px;
   height: 1px;
-  background: #7e818c;
+  background: #696b79;
 }
 
 .checkout-content {
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: 40px;
-  max-width: 1000px;
+  max-width: 980px;
   margin: 0 auto;
 }
 
+/* SECTION HEADERS */
 .section-title-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
-
 .section-title-row h3 { font-size: 18px; font-weight: 700; color: #282c3f; }
 
-.btn-add-new {
-  font-size: 12px;
-  font-weight: 700;
-  color: #535766;
-  border: 1px solid #535766;
-  padding: 8px 16px;
-  background: none;
+/* ADDRESS LISTING */
+.btn-add-new-box {
+  border: 1px dashed #d4d5d9;
   border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  background: #fff;
+  transition: background 0.2s;
+}
+.btn-add-new-box:hover { background: #fdfdfd; }
+.btn-add-new-text {
+  color: #ff3f6c;
+  font-weight: 700;
+  font-size: 14px;
 }
 
 .section-sub {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  color: #282c3f;
+  color: #535766;
   margin-bottom: 15px;
 }
 
@@ -72,27 +78,30 @@
   padding: 20px;
   display: flex;
   gap: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   cursor: pointer;
-  transition: box-shadow 0.2s;
+  background: #fff;
+  transition: all 0.2s;
+  position: relative;
 }
 
 .address-item-card.selected {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-color: #03a685;
+  background-color: #f4fbf9;
 }
 
 .radio-circle {
   width: 16px;
   height: 16px;
-  border: 1px solid #7e818c;
+  border: 1px solid #d4d5d9;
   border-radius: 50%;
   position: relative;
+  background: #fff;
+  top: 2px;
 }
-
 .radio-circle.checked {
   border-color: #ff3f6c;
 }
-
 .radio-circle.checked::after {
   content: '';
   width: 10px;
@@ -107,16 +116,30 @@
 .card-name-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 8px;
 }
+.card-name-row .name { font-weight: 700; font-size: 14px; color: #282c3f; }
+.card-name-row .badge { font-size: 10px; font-weight: 700; padding: 2px 8px; background: #f5f5f6; color: #03a685; border-radius: 12px; border: 1px solid #03a685; }
 
-.card-name-row .name { font-weight: 700; color: #282c3f; }
-.card-name-row .badge { font-size: 10px; padding: 2px 6px; background: #f5f5f6; color: #7e818c; border-radius: 10px; }
-
-.card-info .text { font-size: 13px; color: #282c3f; margin-bottom: 6px; }
-.card-info .mobile { font-size: 13px; color: #7e818c; margin-top: 10px; }
+.card-info .text { font-size: 13px; color: #535766; margin-bottom: 6px; line-height: 1.5; }
+.card-info .mobile { font-size: 13px; color: #535766; margin-top: 12px; }
 .card-info .mobile span { color: #282c3f; font-weight: 700; }
+
+.pay-on-delivery-estimate {
+  font-size: 13px;
+  color: #535766;
+  margin-top: 12px;
+  margin-bottom: 20px;
+}
+.pay-on-delivery-estimate ul {
+  padding-left: 20px;
+  margin-top: 6px;
+}
+.pay-on-delivery-estimate li {
+  color: #03a685;
+  font-weight: 700;
+}
 
 .btn-deliver {
   background: #ff3f6c;
@@ -124,21 +147,53 @@
   border: none;
   font-size: 14px;
   font-weight: 700;
-  padding: 12px 24px;
+  padding: 14px 40px;
   border-radius: 4px;
-  margin-top: 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+.btn-deliver:hover {
+  background: #ff527b;
 }
 
-/* Payment modes */
+/* RIGHT SUMMARY LAYOUT (Shared across Checkout steps) */
+.checkout-right .label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #535766;
+  margin-bottom: 12px;
+}
+.checkout-right .divider { height: 1px; background: #eaeaec; margin: 15px 0; }
+
+.delivery-estimate-box {
+  font-size: 14px;
+  color: #282c3f;
+  margin-bottom: 24px;
+}
+.delivery-estimate-box b { font-weight: 700; }
+
+.price-summary { border-top: 1px solid #eaeaec; padding-top: 20px; }
+.price-summary .row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 12px; color: #282c3f; }
+.text-pink { color: #ff3f6c; }
+.text-green { color: #03a685; }
+
+/* PAYMENT MODES (Myntra Layout) */
 .payment-modes {
   display: flex;
-  border: 1px solid #eaeaec;
-  min-height: 300px;
+  min-height: 480px;
+  border: 1px solid #d4d5d9;
+  border-radius: 4px;
+  background: #fff;
+  overflow: hidden;
 }
 
 .payment-sidebar {
-  width: 200px;
+  width: 240px;
   background: #f5f5f6;
+  border-right: 1px solid #d4d5d9;
+  display: flex;
+  flex-direction: column;
 }
 
 .p-nav-item {
@@ -147,48 +202,103 @@
   text-align: left;
   border: none;
   background: none;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  color: #282c3f;
+  color: #535766;
   cursor: pointer;
   border-bottom: 1px solid #eaeaec;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.p-nav-item small {
+  font-size: 11px;
+  font-weight: 400;
 }
 
 .p-nav-item.active {
   background: #fff;
-  color: #ff3f6c;
+  color: #282c3f;
   border-left: 4px solid #ff3f6c;
 }
-
-.payment-body { padding: 24px; flex: 1; }
-
-/* Right Summary */
-.checkout-right .label {
-  font-size: 12px;
-  font-weight: 700;
-  color: #7e818c;
-  margin-bottom: 10px;
+.p-nav-item:hover:not(.active) {
+  background: #efeff0;
 }
 
-.coupon-box {
-  padding: 16px;
-  border: 1px solid #eaeaec;
+.payment-body {
+  padding: 24px;
+  flex: 1;
+  background: #fff;
+}
+
+.payment-detail-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #282c3f;
+  margin-bottom: 20px;
+}
+
+/* COD Pane Specifics */
+.cod-box {
+  border: 1px solid #d4d5d9;
+  border-radius: 4px;
+  padding: 20px;
+}
+.cod-head {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 30px;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #282c3f;
+}
+.cod-sub {
+  font-size: 13px;
+  color: #535766;
+  margin-top: 8px;
+  margin-left: 32px;
+}
+.btn-cod-place {
+  width: 100%;
+  padding: 14px;
+  background: #ff3f6c;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 24px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+.btn-cod-place:hover { background: #ff527b; }
+
+/* UPI Pane Specifics */
+.upi-box {
+  border: 1px solid #d4d5d9;
+  border-radius: 4px;
+}
+.upi-app-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #eaeaec;
+  cursor: pointer;
+}
+.upi-app-row:last-child { border-bottom: none; }
+.upi-app-name { font-size: 14px; font-weight: 700; color: #282c3f; display: flex; align-items: center; gap: 12px; }
+.upi-app-name img { width: 32px; height: 32px; border: 1px solid #eaeaec; border-radius: 4px; padding: 4px; }
+.upi-app-radio { width: 20px; height: 20px; border: 1px solid #d4d5d9; border-radius: 50%; }
+
+.payment-coming-soon {
+  color: #7e818c;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 40px;
 }
 
-.coupon-box .text { font-size: 14px; font-weight: 700; color: #282c3f; flex: 1; }
-.btn-apply { border: 1px solid #ff3f6c; color: #ff3f6c; background: none; font-size: 12px; font-weight: 700; padding: 6px 12px; }
-
-.price-summary { border-top: 1px solid #eaeaec; padding-top: 20px; }
-.price-summary .row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 12px; color: #282c3f; }
-.text-pink { color: #ff3f6c; }
-.text-green { color: #03a685; }
-
-.price-summary .divider { height: 1px; background: #eaeaec; margin: 15px 0; }
-.price-summary .total-row { display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; color: #282c3f; }
+.price-summary .total-row { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; color: #282c3f; }
 
 .btn-final-order {
   width: 100%;
@@ -197,7 +307,20 @@
   color: #fff;
   border: none;
   border-radius: 4px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
-  margin-top: 20px;
+  margin-top: 24px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+.btn-final-order:hover:not(:disabled) {
+  background: #ff527b;
+}
+.btn-final-order:disabled {
+  background: #f5a6b8;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .checkout-content { grid-template-columns: 1fr; }
 }

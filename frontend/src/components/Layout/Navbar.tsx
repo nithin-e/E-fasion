@@ -100,24 +100,42 @@ const Navbar: React.FC = () => {
               {user ? (
                 <>
                   <div className="navbar__dropdown-header">
-                    <p className="font-bold">{user.name}</p>
-                    <p className="text-xs text-soft">{user.email}</p>
+                    <p className="font-bold">Hello {user.name.split(' ')[0]}</p>
+                    <p className="text-xs text-soft">{user.mobile}</p>
                   </div>
+                  
                   <div className="divider" style={{ margin: '8px 0' }} />
-                  <Link to="/orders" className="navbar__dropdown-item">Orders</Link>
-                  <Link to="/wishlist" className="navbar__dropdown-item">Wishlist</Link>
-                  <Link to="/profile" className="navbar__dropdown-item">Edit Profile</Link>
-                  {user.role === 'admin' && (
-                    <Link to="/admin/dashboard" className="navbar__dropdown-item">Admin Panel</Link>
-                  )}
+                  <div className="navbar__dropdown-group">
+                    <Link to="/profile?tab=orders" className="navbar__dropdown-item">Orders</Link>
+                    <Link to="/wishlist" className="navbar__dropdown-item">Wishlist</Link>
+                    <Link to="/profile?tab=giftcards" className="navbar__dropdown-item">Gift Cards</Link>
+                    <Link to="/profile?tab=contactus" className="navbar__dropdown-item">Contact Us</Link>
+                    <Link to="/profile?tab=insider" className="navbar__dropdown-item">Myntra Insider <span className="badge-new">New</span></Link>
+                  </div>
+
                   <div className="divider" style={{ margin: '8px 0' }} />
-                  <button onClick={handleLogout} className="navbar__dropdown-item">Logout</button>
+                  <div className="navbar__dropdown-group">
+                    <Link to="/profile?tab=credit" className="navbar__dropdown-item">Myntra Credit</Link>
+                    <Link to="/profile?tab=coupons" className="navbar__dropdown-item">Coupons</Link>
+                    <Link to="/profile?tab=cards" className="navbar__dropdown-item">Saved Cards</Link>
+                    <Link to="/profile?tab=upi" className="navbar__dropdown-item">Saved VPA</Link>
+                    <Link to="/profile?tab=addresses" className="navbar__dropdown-item">Saved Addresses</Link>
+                  </div>
+
+                  <div className="divider" style={{ margin: '8px 0' }} />
+                  <div className="navbar__dropdown-group">
+                    <Link to="/profile?tab=edit" className="navbar__dropdown-item">Edit Profile</Link>
+                    {user.role === 'admin' && (
+                      <Link to="/admin/dashboard" className="navbar__dropdown-item">Admin Panel</Link>
+                    )}
+                    <button onClick={handleLogout} className="navbar__dropdown-item">Logout</button>
+                  </div>
                 </>
               ) : (
                 <div className="navbar__dropdown-auth">
                   <p className="font-bold mb-2">Welcome</p>
                   <p className="text-xs text-soft mb-4">To access account and manage orders</p>
-                  <Link to="/login" className="btn btn-primary btn-sm w-full">Login / Signup</Link>
+                  <Link to="/login" className="btn btn-primary btn-sm w-full">LOGIN / SIGNUP</Link>
                 </div>
               )}
             </div>

@@ -26,14 +26,40 @@ const ShopPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   // Filter States from URL
-  const selectedCategory = searchParams.get('category') || '';
-  const selectedBrands = searchParams.getAll('brand');
-  const selectedColors = searchParams.getAll('color');
+  const fParam = searchParams.get('f') || '';
   const currentSort = searchParams.get('sort') || 'recommended';
   const currentSearch = searchParams.get('q') || '';
-  const minPrice = searchParams.get('minPrice');
-  const maxPrice = searchParams.get('maxPrice');
-  const discount = searchParams.get('discount');
+
+  const parsedFilters = React.useMemo(() => {
+    const filters: { brand: string[], color: string[], category: string[], minPrice: string, maxPrice: string, discount: string } = {
+      brand: [], color: [], category: [], minPrice: '', maxPrice: '', discount: ''
+    };
+    if (!fParam) return filters;
+    
+    const parts = fParam.split('::');
+    parts.forEach(part => {
+      const [key, value] = part.split(':');
+      if (!key || !value) return;
+      
+      const vItems = value.split(',');
+      if (key === 'Brand') filters.brand = vItems;
+      else if (key === 'Color') filters.color = vItems;
+      else if (key === 'Category') filters.category = vItems;
+      else if (key === 'Price') {
+         const [min, max] = value.split(' TO ');
+         filters.minPrice = min || '';
+         filters.maxPrice = max || '';
+      }
+      else if (key === 'Discount Range') {
+         const [min] = value.split(' TO ');
+         filters.discount = min || '';
+      }
+    });
+    return filters;
+  }, [fParam]);
+
+  const { brand: selectedBrands, color: selectedColors, category: selectedCategories, minPrice, maxPrice, discount } = parsedFilters;
+  const mainCategoryName = selectedCategories[0] || '';
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -41,7 +67,7 @@ const ShopPage: React.FC = () => {
       const [prodRes, catRes, brandRes] = await Promise.all([
         getProductsApi({
           q: currentSearch,
-          category: selectedCategory,
+          category: selectedCategories.length ? selectedCategories : undefined,
           brand: selectedBrands,
           color: selectedColors,
           minPrice: minPrice ? parseFloat(minPrice) : undefined,
@@ -58,37 +84,44 @@ const ShopPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentSearch, selectedCategory, selectedBrands.join(','), selectedColors.join(','), minPrice, maxPrice, discount, currentSort]);
+  }, [currentSearch, selectedCategories.join(','), selectedBrands.join(','), selectedColors.join(','), minPrice, maxPrice, discount, currentSort]);
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  const setParam = (key: string, value: string | string[]) => {
+  const setParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams);
-    params.delete(key);
-    if (Array.isArray(value)) {
-      value.forEach(v => params.append(key, v));
-    } else if (value) {
-      params.set(key, value);
-    }
+    if (value) params.set(key, value);
+    else params.delete(key);
     setSearchParams(params);
   };
 
-  const toggleArrayFilter = (key: string, value: string) => {
-    const current = searchParams.getAll(key);
+  const updateFParam = (newFilters: typeof parsedFilters) => {
+    const parts: string[] = [];
+    if (newFilters.brand.length) parts.push(`Brand:${newFilters.brand.join(',')}`);
+    if (newFilters.category.length) parts.push(`Category:${newFilters.category.join(',')}`);
+    if (newFilters.color.length) parts.push(`Color:${newFilters.color.join(',')}`);
+    if (newFilters.minPrice && newFilters.maxPrice) parts.push(`Price:${newFilters.minPrice} TO ${newFilters.maxPrice}`);
+    if (newFilters.discount) parts.push(`Discount Range:${newFilters.discount} TO 100.0`);
+    
+    setParam('f', parts.join('::'));
+  };
+
+  const toggleArrayFilter = (key: keyof typeof parsedFilters, value: string) => {
+    const current = parsedFilters[key] as string[];
     const updated = current.includes(value) ? current.filter(v => v !== value) : [...current, value];
-    setParam(key, updated);
+    updateFParam({ ...parsedFilters, [key]: updated });
   };
 
   return (
     <div className="shop-page container" style={{ maxWidth: '1600px' }}>
       <div className="shop-breadcrumbs">
         <span onClick={() => navigate('/')}>Home</span> / <span>Clothing</span> / 
-        <span className="current">{selectedCategory ? categories.find(c => c._id === selectedCategory)?.name : 'All Products'}</span>
+        <span className="current">{mainCategoryName ? mainCategoryName : 'All Products'}</span>
       </div>
 
       <div className="shop-title-row">
         <h3>
-          {selectedCategory ? categories.find(c => c._id === selectedCategory)?.name : 'All Products'} 
+          {mainCategoryName ? mainCategoryName : 'All Products'} 
           <span className="item-count"> - {products.length} items</span>
         </h3>
       </div>
@@ -118,8 +151,8 @@ const ShopPage: React.FC = () => {
                 <label key={cat._id} className="shop-filters__checkbox">
                   <input 
                     type="checkbox" 
-                    checked={selectedCategory === cat._id} 
-                    onChange={() => setParam('category', selectedCategory === cat._id ? '' : cat._id)} 
+                    checked={selectedCategories.includes(cat.name)} 
+                    onChange={() => toggleArrayFilter('category', cat.name)} 
                   />
                   {cat.name}
                 </label>
@@ -139,8 +172,8 @@ const ShopPage: React.FC = () => {
                 <label key={brand._id} className="shop-filters__checkbox">
                   <input 
                     type="checkbox" 
-                    checked={selectedBrands.includes(brand._id)} 
-                    onChange={() => toggleArrayFilter('brand', brand._id)} 
+                    checked={selectedBrands.includes(brand.name)} 
+                    onChange={() => toggleArrayFilter('brand', brand.name)} 
                   />
                   {brand.name}
                 </label>
@@ -155,9 +188,10 @@ const ShopPage: React.FC = () => {
             <p className="shop-filters__label">PRICE</p>
             <div className="shop-filters__options">
               {[
-                { label: 'Rs. 499 to Rs. 999', min: '499', max: '999' },
-                { label: 'Rs. 999 to Rs. 1999', min: '999', max: '1999' },
-                { label: 'Rs. 1999 to Rs. 4999', min: '1999', max: '4999' },
+                { label: 'Rs. 499 to Rs. 999', min: '499.0', max: '999.0' },
+                { label: 'Rs. 999 to Rs. 1499', min: '999.0', max: '1499.0' },
+                { label: 'Rs. 1499 to Rs. 2499', min: '1499.0', max: '2499.0' },
+                { label: 'Rs. 2499 to Rs. 4999', min: '2499.0', max: '4999.0' },
               ].map(range => (
                 <label key={range.label} className="shop-filters__checkbox">
                   <input 
@@ -165,9 +199,9 @@ const ShopPage: React.FC = () => {
                     checked={minPrice === range.min && maxPrice === range.max}
                     onChange={() => {
                         if (minPrice === range.min) {
-                            setParam('minPrice', ''); setParam('maxPrice', '');
+                           updateFParam({ ...parsedFilters, minPrice: '', maxPrice: '' });
                         } else {
-                            setParam('minPrice', range.min); setParam('maxPrice', range.max);
+                           updateFParam({ ...parsedFilters, minPrice: range.min, maxPrice: range.max });
                         }
                     }}
                   />
@@ -194,7 +228,7 @@ const ShopPage: React.FC = () => {
                     checked={selectedColors.includes(color.name)} 
                     onChange={() => toggleArrayFilter('color', color.name)} 
                   />
-                  <span className="color-dot" style={{ background: color.hex, border: color.name === 'White' ? '1px solid #ddd' : 'none' }}></span>
+                  <span className="color-dot" style={{ backgroundColor: color.hex, border: color.name === 'White' ? '1px solid #ddd' : 'none' }}></span>
                   {color.name}
                 </label>
               ))}
@@ -211,8 +245,8 @@ const ShopPage: React.FC = () => {
                   <input 
                     type="radio" 
                     name="discount" 
-                    checked={discount === d.toString()} 
-                    onChange={() => setParam('discount', d.toString())} 
+                    checked={discount === d.toString() + '.0'} 
+                    onChange={() => updateFParam({ ...parsedFilters, discount: d.toString() + '.0' })} 
                   />
                   {d}% and above
                 </label>
