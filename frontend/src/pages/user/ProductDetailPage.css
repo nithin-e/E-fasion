@@ -1,55 +1,98 @@
-.pdp-page { padding-top: var(--space-6); padding-bottom: var(--space-20); }
+/* ProductDetailsPage.css - Myntra Feature Parity */
+
+.pdp-page { 
+  padding-top: var(--space-6); 
+  padding-bottom: var(--space-20); 
+}
+
+.pdp-breadcrumbs {
+  font-size: 14px;
+  color: #282c3f;
+  margin-bottom: var(--space-6);
+  font-weight: 400;
+}
+.pdp-breadcrumbs span {
+  font-weight: 700;
+}
 
 .pdp-grid {
-  display: grid;
-  grid-template-columns: 58% 38%;
+  display: flex;
+  justify-content: space-between;
   gap: 4%;
 }
 
-/* Gallery Grid */
-.pdp-gallery {
+/* Left Column: Masonry Image Gallery */
+.pdp-gallery-masonry {
+  width: 58%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-3);
+  align-content: start;
 }
-.pdp-gallery-item {
+
+.pdp-masonry-item {
   width: 100%;
   aspect-ratio: 3/4;
   overflow: hidden;
   background: var(--color-surface-alt);
+  border: 1px solid #f5f5f6;
+  position: relative;
+  cursor: zoom-in;
 }
-.pdp-gallery-item img {
+
+.pdp-masonry-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s;
-}
-.pdp-gallery-item:hover img {
-  transform: scale(1.03);
+  transition: transform 0.5s ease;
 }
 
-/* Product Info */
-.pdp-info {
-  padding-left: var(--space-6);
+.pdp-masonry-item:hover img {
+  transform: scale(1.05);
 }
 
+/* Make every 3rd image break the pattern if there are many */
+.pdp-masonry-item:nth-child(3n+1):last-child {
+  grid-column: span 2;
+  aspect-ratio: 16/9;
+}
+
+/* Right Column: Information Stream */
+.pdp-info-stream {
+  width: 38%;
+  padding-right: var(--space-6);
+}
+
+.pdp-divider {
+  border: 0;
+  height: 1px;
+  background: #eaeaec;
+  margin: var(--space-4) 0;
+}
+.line-padded {
+  margin: var(--space-6) 0;
+}
+
+/* Brand & Title */
 .pdp-brand-area {
-  border-bottom: 1px solid #edeff2;
-  padding-bottom: var(--space-5);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-2);
 }
 .pdp-brand {
   font-size: 24px;
   font-weight: 700;
   color: var(--color-dark);
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 .pdp-name {
   font-size: 20px;
   font-weight: 400;
   color: #535665;
   margin-bottom: var(--space-4);
+  line-height: 1.4;
 }
+
 .pdp-rating-badge {
   display: inline-flex;
   align-items: center;
@@ -60,10 +103,24 @@
   font-weight: 700;
   color: var(--color-dark);
   border-radius: 2px;
+  cursor: pointer;
+}
+.pdp-rating-badge:hover {
+  border-color: var(--color-dark);
+}
+.pdp-rating-count {
+  font-weight: 400;
+  color: #535766;
 }
 
+/* Price */
 .pdp-price-area {
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-5);
+}
+.pdp-price-hero {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
 }
 .pdp-price-current {
   font-size: 24px;
@@ -72,9 +129,10 @@
 }
 .pdp-price-mrp {
   font-size: 20px;
+  color: #7e818c;
+}
+.pdp-strike {
   text-decoration: line-through;
-  color: #94969f;
-  margin: 0 12px;
 }
 .pdp-discount {
   font-size: 20px;
@@ -85,12 +143,12 @@
   font-size: 14px;
   color: #03a685;
   font-weight: 700;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
-/* Sizes */
-.pdp-sizes {
-  margin-bottom: var(--space-8);
+/* Sizes Block */
+.pdp-sizes-block {
+  margin-bottom: var(--space-6);
 }
 .pdp-sizes-header {
   display: flex;
@@ -98,7 +156,11 @@
   justify-content: space-between;
   margin-bottom: var(--space-4);
 }
-.pdp-sizes-header h3 { font-size: 16px; font-weight: 700; }
+.pdp-sizes-header h3 { 
+  font-size: 16px; 
+  font-weight: 700; 
+  letter-spacing: 0.5px;
+}
 .pdp-size-chart {
   font-size: 14px;
   font-weight: 700;
@@ -107,7 +169,9 @@
   border: none;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
 }
 
 .pdp-size-chips {
@@ -116,18 +180,22 @@
   gap: var(--space-3);
 }
 .pdp-size-chip {
-  width: 50px;
+  position: relative;
+  min-width: 50px;
   height: 50px;
-  border-radius: 50%;
+  padding: 0 16px;
+  border-radius: 50px; /* Myntra uses slightly rounded squares or full pill. We use full pill here for parity. */
   border: 1px solid var(--color-border);
   background: #fff;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   color: var(--color-dark);
+  cursor: pointer;
 }
 .pdp-size-chip:hover:not(.oos) {
   border-color: var(--color-primary);
@@ -135,27 +203,44 @@
 .pdp-size-chip.active {
   border-color: var(--color-primary);
   color: var(--color-primary);
+  background-color: #fffafb;
 }
 .pdp-size-chip.oos {
   background: var(--color-surface-alt);
   color: #bfc0c6;
-  position: relative;
   cursor: not-allowed;
+  border-color: #eaeaec;
 }
 .pdp-size-chip.oos::after {
   content: '';
   position: absolute;
+  top: 50%;
+  left: 0;
   width: 100%;
   height: 1px;
   background: #bfc0c6;
-  transform: rotate(-45deg);
+  transform: rotate(-35deg);
+}
+.pdp-stock-left {
+  font-size: 10px;
+  color: #ff3f6c;
+  font-weight: 400;
+  position: absolute;
+  bottom: -20px;
+  white-space: nowrap;
+}
+.pdp-error-text {
+  color: #ff3f6c;
+  font-size: 14px;
+  margin-top: 12px;
+  font-weight: 600;
 }
 
 /* Actions */
 .pdp-actions {
   display: flex;
   gap: var(--space-4);
-  margin-bottom: var(--space-10);
+  margin-bottom: var(--space-4);
 }
 .btn-pdp-primary {
   flex: 1.5;
@@ -169,9 +254,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-3);
+  gap: 12px;
   cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s;
 }
+.btn-pdp-primary:hover {
+  opacity: 0.9;
+}
+.btn-pdp-primary:disabled {
+  background: #d4d5d9;
+  cursor: not-allowed;
+}
+
 .btn-pdp-secondary {
   flex: 1;
   height: 56px;
@@ -184,64 +279,244 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-3);
+  gap: 12px;
   cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: border 0.2s;
 }
 .btn-pdp-secondary:hover {
   border-color: var(--color-dark);
 }
 
-/* Delivery */
-.pdp-delivery {
-  border-bottom: 1px solid #edeff2;
-  padding-bottom: var(--space-8);
-  margin-bottom: var(--space-8);
+/* Delivery Engine */
+.pdp-delivery-engine {
+  width: 100%;
 }
-.pdp-delivery h3 { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: var(--space-4); }
-.pdp-pincode-box {
+.pdp-delivery-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: var(--space-4);
+  letter-spacing: 0.5px;
+}
+
+.pdp-pincode-wrapper {
   display: flex;
   border: 1px solid var(--color-border);
   border-radius: 4px;
-  width: fit-content;
   overflow: hidden;
-  margin-bottom: var(--space-3);
+  margin-bottom: 8px;
+  height: 48px;
+  transition: border-color 0.2s;
 }
-.pdp-pincode-box input {
-  padding: 10px 16px;
+.pdp-pincode-wrapper:focus-within {
+  border-color: #282c3f;
+}
+.pdp-pincode-wrapper.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+.pdp-pincode-wrapper.error {
+  border-color: #ff3f6c;
+}
+.pdp-pincode-wrapper input {
+  flex: 1;
+  padding: 0 16px;
   border: none;
   outline: none;
-  font-size: 14px;
+  font-size: 16px;
+  letter-spacing: 2px;
 }
-.pdp-pincode-box button {
+.pdp-pincode-wrapper button {
   background: none;
   border: none;
   color: var(--color-primary);
   font-weight: 700;
-  padding: 0 16px;
+  padding: 0 20px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+.pdp-pincode-wrapper button:disabled {
+  color: #a9abb3;
+  cursor: not-allowed;
+}
+
+.pdp-delivery-hint {
+  font-size: 14px;
+  color: #535766;
+}
+.pdp-delivery-error {
+  font-size: 14px;
+  color: #ff3f6c;
+  font-weight: 600;
+}
+
+.pdp-delivery-perks {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+}
+.pdp-delivery-perks li {
+  font-size: 15px;
+  color: #282c3f;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.pdp-delivery-perks strong {
+  font-weight: 700;
+}
+
+/* Offers Engine */
+.pdp-section-title {
+  margin-bottom: var(--space-4);
+}
+.pdp-section-title h3 {
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.5px;
+}
+.pdp-offer-card {
+  border: 1px solid #eaeaec;
+  border-radius: 4px;
+  padding: 16px;
+  background: #fbfbfa;
+}
+.pdp-offer-card h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.pdp-offer-price {
+  color: #ff3f6c;
+}
+.pdp-offer-card ul {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+.pdp-offer-card li {
+  font-size: 14px;
+  color: #282c3f;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.pdp-offer-apply {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 0;
   cursor: pointer;
 }
-.pdp-delivery-perks { font-size: 14px; color: #535766; }
 
-/* Details */
-.pdp-details h3 { font-size: 16px; font-weight: 700; margin-bottom: var(--space-4); }
-.pdp-description { font-size: 14px; line-height: 1.6; color: #282c3f; margin-bottom: var(--space-6); }
-.pdp-spec-grid {
+/* Specific Details Engine */
+.pdp-description-raw {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #282c3f;
+  margin-bottom: var(--space-6);
+}
+
+.pdp-spec-heading {
+  font-size: 16px;
+  font-weight: 700;
+  color: #282c3f;
+  margin-bottom: 8px;
+  margin-top: 24px;
+}
+.pdp-spec-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #282c3f;
+}
+
+.pdp-spec-grid-rich {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
+  row-gap: 20px;
+  column-gap: 30px;
+  margin-top: 16px;
 }
-.pdp-spec-item {
+.pdp-spec-item-rich {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  border-bottom: 1px solid #efeff0;
-  padding-bottom: var(--space-2);
+  gap: 4px;
+  border-bottom: 1px solid #eaeaec;
+  padding-bottom: 12px;
 }
-.pdp-spec-item span { font-size: 12px; color: #7e818c; }
-.pdp-spec-item strong { font-size: 14px; color: #282c3f; font-weight: 400; }
+.spec-label {
+  font-size: 12px;
+  color: #7e818c;
+}
+.spec-value {
+  font-size: 16px;
+  color: #282c3f;
+  font-weight: 400;
+}
 
-@media (max-width: 768px) {
-  .pdp-grid { grid-template-columns: 1fr; }
-  .pdp-gallery { grid-template-columns: 1fr; }
-  .pdp-info { padding-left: 0; margin-top: var(--space-6); }
+/* Recommendations Carousel */
+.pdp-recommendations-section {
+  margin-top: 60px;
+  border-top: 1px solid #eaeaec;
+  padding-top: 40px;
+}
+.pdp-section-header-large {
+  font-size: 24px;
+  font-weight: 700;
+  color: #282c3f;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+
+.pdp-scroll-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  padding-bottom: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: #d4d5d9 transparent;
+}
+.pdp-scroll-carousel::-webkit-scrollbar {
+  height: 6px;
+}
+.pdp-scroll-carousel::-webkit-scrollbar-thumb {
+  background-color: #d4d5d9;
+  border-radius: 3px;
+}
+
+.pdp-carousel-card {
+  min-width: 250px;
+  max-width: 250px;
+  flex-shrink: 0;
+}
+
+.bounce {
+  animation: bagBounce 0.5s ease;
+}
+@keyframes bagBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .pdp-grid { 
+    flex-direction: column; 
+    gap: 24px;
+  }
+  .pdp-gallery-masonry { 
+    width: 100%; 
+  }
+  .pdp-info-stream { 
+    width: 100%; 
+    padding-right: 0;
+  }
 }

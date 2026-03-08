@@ -37,7 +37,7 @@ export const env = {
   GOOGLE_CLIENT_ID: optional('GOOGLE_CLIENT_ID'),
 
   // Geo
-  WAREHOUSE_LAT: parseFloat(process.env.WAREHOUSE_LAT || '28.7041'),
-  WAREHOUSE_LNG: parseFloat(process.env.WAREHOUSE_LNG || '77.1025'),
-  DELIVERY_RADIUS_KM: parseFloat(process.env.DELIVERY_RADIUS_KM || '20'),
+  WAREHOUSE_LAT: parseFloat(process.env.WAREHOUSE_LAT || '12.9988'),
+  WAREHOUSE_LNG: parseFloat(process.env.WAREHOUSE_LNG || '77.5921'),
+  DELIVERY_RADIUS_KM: parseFloat(process.env.DELIVERY_RADIUS_KM || '15'),
 } as const;

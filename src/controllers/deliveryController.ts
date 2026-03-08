@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { HTTP } from '../utils/statuscodes';
 
-// predefined central point (Bangalore Palace)
-const BANGALORE_CENTER = { lat: 12.9988, lng: 77.5921 };
-const MAX_SERVICEABLE_RADIUS_KM = 20;
+import { env } from '../config/env';
+
+// predefined central point (From ENV)
+const BANGALORE_CENTER = { lat: env.WAREHOUSE_LAT, lng: env.WAREHOUSE_LNG };
+const MAX_SERVICEABLE_RADIUS_KM = env.DELIVERY_RADIUS_KM;
 
 function calculateDistanceKM(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; // Radius of the earth in km

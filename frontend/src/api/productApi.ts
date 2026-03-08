@@ -18,6 +18,9 @@ export const getProductsApi = (params: {
 export const getProductByIdApi = (id: string) =>
   api.get(`/products/${id}`);
 
+export const getProductRecommendationsApi = (id: string) =>
+  api.get(`/products/${id}/recommendations`);
+
 export const getCategoriesApi = () =>
   api.get('/categories');
 

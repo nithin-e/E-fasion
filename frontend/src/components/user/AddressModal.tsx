@@ -88,10 +88,8 @@ const AddressModal: React.FC<AddressModalProps> = ({ onClose, onSuccess }) => {
       const res = await addAddressApi({
         ...formData,
         isDefault: false,
-        location: {
-          type: 'Point',
-          coordinates: [coords.lng, coords.lat] 
-        }
+        lat: coords.lat,
+        lng: coords.lng
       });
       toast.success('Address added successfully');
       onSuccess(res.data.address || res.data);
